@@ -12,6 +12,11 @@
     "refresh:releases": "node scripts/update-releases.mjs",
     "deploy": "npm run build && npm run check && wrangler deploy"
   },
-  "devDependencies": { "wrangler": "4.162.0" },
-  "engines": { "node": ">=22" }
+  "devDependencies": {
+    "wrangler": "4.162.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT"
 }
