@@ -1,0 +1,13 @@
+{
+  "tag": "v0.0.1",
+  "url": "https://github.com/openplayx/openplayx/releases/tag/v0.0.1",
+  "checkedAt": "2026-11-15",
+  "assets": [
+    { "platform": "macos", "architecture": "Apple Silicon", "name": "openplayx-0.0.1-macos-arm64-d8c269cc38.zip", "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.1/openplayx-0.0.1-macos-arm64-d8c269cc38.zip", "bytes": 87203778 },
+    { "platform": "android", "architecture": "ARM64", "name": "openplayx-0.0.1-android-arm64-d8c269cc38.apk", "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.1/openplayx-0.0.1-android-arm64-d8c269cc38.apk", "bytes": 91530790 },
+    { "platform": "android", "architecture": "ARMv7", "name": "openplayx-0.0.1-android-armv7-d8c269cc38.apk", "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.1/openplayx-0.0.1-android-armv7-d8c269cc38.apk", "bytes": 84358718 },
+    { "platform": "android", "architecture": "x86_64", "name": "openplayx-0.0.1-android-x64-d8c269cc38.apk", "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.1/openplayx-0.0.1-android-x64-d8c269cc38.apk", "bytes": 100279810 },
+    { "platform": "android", "architecture": "Universal", "name": "openplayx-0.0.1-android-d8c269cc38.apk", "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.1/openplayx-0.0.1-android-d8c269cc38.apk", "bytes": 268496170 }
+  ],
+  "checksums": "https://github.com/openplayx/openplayx/releases/download/v0.0.1/SHA256SUMS"
+}

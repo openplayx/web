@@ -1,0 +1,17 @@
+{
+  "name": "openplayx-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The bilingual OpenPlayX website, deployed with Cloudflare Workers Static Assets.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "dev": "node scripts/serve.mjs",
+    "preview": "node scripts/serve.mjs",
+    "refresh:releases": "node scripts/update-releases.mjs",
+    "deploy": "npm run build && npm run check && wrangler deploy"
+  },
+  "devDependencies": { "wrangler": "4.162.0" },
+  "engines": { "node": ">=22" }
+}
