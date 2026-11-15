@@ -58,9 +58,9 @@ Do not commit OAuth credentials, API tokens or `.dev.vars`. No account ID, upstr
 
 - Product claims follow implemented capabilities; cross-device sync and unvalidated platforms are not presented as finished.
 - App illustration and original sample artwork are visibly labelled, and do not expose personal media data.
-- Main app code is GPL-3.0-or-later; ecosystem services retain their own licenses. Some app build dependencies remain private. This site does not relicense them.
+- Original main app code is MIT; ecosystem services retain their own licenses. Some app build dependencies remain private. This site does not relicense them.
 - No mailing-list form, ads, analytics or account system is included. See the published privacy page for Cloudflare/GitHub boundaries.
 
 ## License and contribution
 
-Website code and original illustrations: [MIT](LICENSE). See [NOTICE.md](NOTICE.md), [asset notices](public/NOTICE.md), [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md). The app has its own GPL license and release source requirements.
+Website code and original illustrations: [MIT](LICENSE). See [NOTICE.md](NOTICE.md), [asset notices](public/NOTICE.md), [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md). The app preserves separate third-party licenses, including GPL terms for builds linking sing-box.
