@@ -14,7 +14,7 @@ Production: **https://openplayx.com/** (English) and **https://openplayx.com/zh/
 | `/contribute/` | `/zh/contribute/` | Issue, code, documentation and integration contributions |
 | `/privacy/` | `/zh/privacy/` | Website hosting and app/service data boundaries |
 
-Language links keep the corresponding page and current hash. The root always defaults to English; there is no locale-detection redirect. Localized copy is rendered to HTML at build time, so reading and navigation work without JavaScript. JavaScript only handles the mobile menu and illustrative preview tabs.
+Language links keep the corresponding page and current hash. The root always defaults to English; there is no locale-detection redirect. Localized copy is rendered to HTML at build time, so reading and navigation work without JavaScript. JavaScript handles navigation, illustrative tabs and optional consented analytics.
 
 ## Local development
 
@@ -59,7 +59,13 @@ Do not commit OAuth credentials, API tokens or `.dev.vars`. No account ID, upstr
 - Product claims follow implemented capabilities; cross-device sync and unvalidated platforms are not presented as finished.
 - App illustration and original sample artwork are visibly labelled, and do not expose personal media data.
 - Original main app code is MIT; ecosystem services retain their own licenses. Some app build dependencies remain private. This site does not relicense them.
-- No mailing-list form, ads, analytics or account system is included. See the published privacy page for Cloudflare/GitHub boundaries.
+- No mailing-list form, ads or account system is included. PostHog US analytics starts only after consent; visitors can reject or withdraw through the footer. No replay or automatic click collection. See the published privacy page.
+
+## Usage analytics
+
+`content/analytics.json` contains only the public Project Token and US ingestion host. Never add a Personal API Key. `src/analytics.js` is bundled locally; CSP permits only the US ingestion endpoint beyond same-origin resources. `node --test scripts/analytics.test.mjs` checks consent, withdrawal and URL sanitization.
+
+UTM values are allowlisted in `content/campaigns.json`. Use `?analytics_test=1` for validation events excluded from production dashboards; localhost also uses validation. Normal visits use production. Website clicks are not completed downloads or installs. GitHub counters and backend operations live in the sibling repository `build/docs/posthog.md`.
 
 ## License and contribution
 

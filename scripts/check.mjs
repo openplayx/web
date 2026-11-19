@@ -37,6 +37,6 @@ for(const lang of ['en','zh'])for(const page of pages){
 }
 const css=await readFile(resolve(root,'assets/site.css'),'utf8');
 assert(css.includes('prefers-reduced-motion'));
-assert(!(await readFile(resolve(root,'index.html'),'utf8')).includes('analytics'));
+assert((await readFile(resolve(root,'index.html'),'utf8')).includes('/assets/analytics.js'));
 assert((await readFile(resolve(root,'404.html'),'utf8')).includes('noindex'));
 console.log(`Checked 10 localized pages, ${links} local references, release assets, language parity and metadata.`);

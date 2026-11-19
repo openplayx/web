@@ -1,0 +1,6 @@
+{
+  "sources": ["threads", "instagram", "pinterest", "linkedin", "facebook", "youtube", "tiktok", "x", "xiaohongshu", "bilibili", "v2ex", "github"],
+  "mediums": ["social", "community", "referral", "email", "paid_social"],
+  "campaigns": ["launch_2026_11"],
+  "contents": ["nas_demo_01", "subtitle_demo_01", "ai_demo_01", "profile"]
+}

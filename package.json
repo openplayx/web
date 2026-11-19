@@ -13,10 +13,14 @@
     "deploy": "npm run build && npm run check && wrangler deploy"
   },
   "devDependencies": {
+    "esbuild": "0.28.2",
     "wrangler": "4.162.0"
   },
   "engines": {
     "node": ">=22"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "posthog-js": "1.451.2"
+  }
 }

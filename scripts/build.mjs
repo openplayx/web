@@ -1,4 +1,5 @@
 import { mkdir, rm, cp, writeFile } from 'node:fs/promises';
+import { build } from 'esbuild';
 import { render, pages } from '../src/render.mjs';
 import releases from '../content/releases.json' with { type: 'json' };
 const root = new URL('../', import.meta.url);
@@ -6,6 +7,8 @@ const dist = new URL('dist/', root);
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 await cp(new URL('public/', root), dist, { recursive: true });
+await build({entryPoints:[new URL('src/analytics.js',root).pathname],bundle:true,minify:true,
+  format:'iife',platform:'browser',target:'es2020',outfile:new URL('assets/analytics.js',dist).pathname});
 for (const lang of ['en', 'zh']) {
   for (const page of pages) {
     const path = `${lang === 'zh' ? 'zh/' : ''}${page ? page + '/' : ''}`;

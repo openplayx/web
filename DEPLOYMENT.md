@@ -1,18 +1,26 @@
 # Deployment status
 
-Checked on 2026-11-15.
+Checked on 2026-11-19.
 
 ## Live website
 
 - Worker: `openplayx-web`, Cloudflare Workers Static Assets.
 - Production: https://openplayx.com/ and https://www.openplayx.com/.
 - Production Chinese: https://openplayx.com/zh/.
-- Deployed version: `150f7246-bf17-42fd-8ac5-47c676ce71a2`.
+- Deployed version: `b580907f-83b7-4209-a3df-d493d42bd109`.
 - Default English: https://openplayx-web.zhyoulun.workers.dev/
 - Chinese: https://openplayx-web.zhyoulun.workers.dev/zh/
 - All 10 localized pages, CSS and JavaScript returned HTTP 200; an unknown path returned HTTP 404. Security headers were present.
 - Desktop and mobile browser checks covered language switching, the mobile navigation, illustrative preview tabs and download pages.
-- `npm run build`, `npm run check` and Wrangler's deployment dry run passed. The checker validated 212 local references and release metadata.
+- `npm run build`, `npm run check` and deployment passed. The checker validated 222 local references and release metadata.
+
+## PostHog update
+
+Optional analytics is now live with English/Chinese consent controls and footer withdrawal. The SDK is bundled locally; CSP allows the US ingestion host. Replay, autocapture, heatmaps, surveys and automatic error collection are disabled. Project ID: 748276. Source contains a public Project Token only; no Personal API Key.
+
+Consent rejection persisted across reload; enabling and withdrawal worked on the production domain. Both domains served the bundle and Chinese privacy page over HTTPS with the expected CSP. Website unit tests cover no initialization before consent, required ingestion token preservation, private URL/referrer removal and withdrawal. Local test events reached PostHog with sanitized URLs and channel attribution; use `?analytics_test=1` for production-domain validation.
+
+`www.openplayx.com` continues to serve the site directly. A proposed host-based `_redirects` rule was rejected by Workers Static Assets and removed before successful deployment.
 
 ## Custom domains verified
 
