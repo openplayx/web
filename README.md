@@ -69,4 +69,6 @@ UTM values are allowlisted in `content/campaigns.json`. Use `?analytics_test=1` 
 
 ## License and contribution
 
+See [SOURCES.md](SOURCES.md) for dependency sources, asset provenance and attribution maintenance.
+
 Website code and original illustrations: [MIT](LICENSE). See [NOTICE.md](NOTICE.md), [asset notices](public/NOTICE.md), [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md). The app preserves separate third-party licenses, including GPL terms for builds linking sing-box.
