@@ -28,13 +28,13 @@ async function ready(p,title){await until(()=>p.root.querySelector('h1')?.textCo
 async function submit(p,id='auth-form'){p.field(id).dispatchEvent(new p.w.Event('submit',{bubbles:true,cancelable:true}));await tick();await tick();}
 const click=(p,action)=>{const b=p.root.querySelector(`[data-action="${action}"]`);assert(b,'missing '+action);b.click();};
 test('exact account routes use strict headers; grant page and old scripts are removed',()=>{
- for(const path of ['','login','register','recover','setup','reset','verify','connector','connectors','settings','services','assets/account.js','assets/account.css']){const r=pageResponse(new Request('https://openplayx.com/account/'+path));assert.equal(r.status,200);assert.equal(r.headers.get('Cache-Control'),'no-store');assert.match(r.headers.get('Content-Security-Policy'),/frame-ancestors 'none'/);}
+ for(const path of ['','login','register','recover','setup','reset','verify','connector','connectors','settings','services','assets/account.js','assets/account.css','assets/basecoat.css','assets/opx-theme.css','assets/opx-theme.js']){const r=pageResponse(new Request('https://openplayx.com/account/'+path));assert.equal(r.status,200);assert.equal(r.headers.get('Cache-Control'),'no-store');assert.match(r.headers.get('Content-Security-Policy'),/frame-ancestors 'none'/);}
  assert.equal(pageResponse(new Request('https://openplayx.com/account/permissions')).status,404);assert.equal(pageResponse(new Request('https://openplayx.com/account/login',{method:'POST'})).status,405);
 });
 test('guest sees a separate login; login returns to services and exposes no service-management controls',async()=>{
- const p=page('');await ready(p,'欢迎回来');assert.equal(p.w.location.pathname,'/account/login');assert(!p.root.querySelector('.op-side'));assert.equal(p.field('pairing-code'),null);
+ const p=page('');await ready(p,'欢迎回来');assert.equal(p.w.location.pathname,'/account/login');assert.equal(p.field('account-sidebar').hidden,true);assert.equal(p.field('pairing-code'),null);
  p.field('email').value='owner@example.com';p.field('password').value='owner-password-123';await submit(p);await ready(p,'我的服务');
- assert(p.root.textContent.includes('<img src=x'));assert.equal(p.root.querySelector('.op-main img'),null);assert.equal(p.root.querySelector('[data-action="add-service"]'),null);assert.equal(p.root.querySelector('[data-action="devices"]'),null);
+ assert(p.root.textContent.includes('<img src=x'));assert.equal(p.field('account-content').querySelector('img'),null);assert.equal(p.field('account-sidebar').hidden,false);assert.equal(p.root.querySelector('[data-action="add-service"]'),null);assert.equal(p.root.querySelector('[data-action="devices"]'),null);
  assert(p.calls.every(c=>!c.headers?.Authorization));assert.equal(p.w.localStorage.length,0);assert.equal(p.w.sessionStorage.length,0);
  click(p,'service-detail');assert(p.root.textContent.includes('云端不提供服务编辑'));click(p,'close');click(p,'logout');await ready(p,'欢迎回来');p.dom.window.close();
 });

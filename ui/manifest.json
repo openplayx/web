@@ -1,0 +1,14 @@
+{
+  "kit": "openplayx-ui",
+  "basecoat": "basecoat-css@1.1.0",
+  "files": {
+    "README.md": "b5d9fdb2d4bb5c2f52fb2896dc1aae174056662f3630b1e2cf5fb9815c6d01b8",
+    "kit.mjs": "8ba0b0b0085943379951b5277146ebfdb6472d396db12a811c4b6c35671f3016",
+    "opx-logo.svg": "b99b457908f96bc811f0b75e689c970c1a614500b4d37de6b0d8913568633af1",
+    "opx-theme.css": "3baa3325d3b327c5787990adb4d66f1813c93a36ae3321781b926729b954b712",
+    "opx-theme.js": "f749ebe6950185a56aa4303223fd6bcc48bbbf234a420fabfb7f0e776a7f0607",
+    "vendor/basecoat/LICENSE.md": "160a6cea26ff1931297957499ab739e94c4bc79ecea18b490c9f533fa76ace78",
+    "vendor/basecoat/basecoat.cdn.min.css": "e6354ef1e99adc94257e579507f18cb00307a08cc2b976deb320368eb7c28e70",
+    "ui-kit.mjs": "7d30d460dbc772051a836d980d0b6e0b308734cf460d77d9658219b6f34ce8b2"
+  }
+}

@@ -11,7 +11,7 @@
     "preview": "npm run build && wrangler dev",
     "refresh:releases": "node scripts/update-releases.mjs",
     "deploy": "npm test && npm run test:integration && npm run build && npm run check && wrangler deploy",
-    "test": "node --test test/*.test.mjs scripts/*.test.mjs",
+    "test": "node ui/kit.mjs --check && node --test test/*.test.mjs scripts/*.test.mjs",
     "test:integration": "node scripts/test-worker-integration.mjs"
   },
   "devDependencies": {

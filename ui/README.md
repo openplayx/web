@@ -1,0 +1,34 @@
+# OpenPlayX UI kit
+
+Shared look for the OpenPlayX web tools: the account center (`web /account`), the admin
+console (`admin`) and the Connector manager (`openplayx-connector`). The marketing site keeps
+its own stylesheet and only reuses the colors.
+
+- **Components**: [Basecoat](https://basecoatui.com) 1.1.0 (`basecoat-css`, MIT, see
+  `vendor/basecoat/LICENSE.md`), the prebuilt `basecoat.cdn.min.css`. No Tailwind and no build
+  step; Basecoat's own JavaScript is not used.
+- **Theme**: `opx-theme.css` maps the Flutter app's palette (Zinc + teal primary, semantic
+  status colors) onto shadcn token names and adds a few `opx-*` layout helpers.
+- **Behaviour**: `opx-theme.js` follows the OS light/dark setting (overridable with
+  `?theme=` or `localStorage["opx-theme"]`) and drives `.sidebar` on narrow screens.
+- **Logo**: `opx-logo.svg`, the orange mark. Orange is used for the logo only.
+
+Load order in `<head>`:
+
+```html
+<link rel="stylesheet" href="…/basecoat.cdn.min.css">
+<link rel="stylesheet" href="…/opx-theme.css">
+<script src="…/opx-theme.js"></script>
+```
+
+## Source of truth and sync
+
+Edit files here, in `openplayx/web/ui`, then run:
+
+```sh
+node scripts/sync-ui.mjs --all   # regenerates ui-kit.mjs + manifest.json, copies to admin and connector
+```
+
+`ui-kit.mjs` exports the files as strings for Workers. Every copy checks itself with
+`node ui/kit.mjs --check` (the Connector checks the manifest from Go tests), so edits made
+to a copy fail its tests.
