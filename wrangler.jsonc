@@ -20,6 +20,11 @@
     "not_found_handling": "404-page",
     "binding": "ASSETS",
     "run_worker_first": [
+      "/",
+      "/download/",
+      "/zh/",
+      "/zh/download/",
+      "/release.json",
       "/health",
       "/account/*",
       "/adminzzz",
@@ -28,6 +33,12 @@
     ]
   },
   "main": "src/worker.mjs",
+  "kv_namespaces": [
+    {
+      "binding": "RELEASES",
+      "id": "587a6c50bc9a4c528ac9156440831976"
+    }
+  ],
   "services": [
     {
       "binding": "API",

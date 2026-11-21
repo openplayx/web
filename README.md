@@ -33,7 +33,9 @@ No framework or runtime package is needed by visitors. `content/copy.mjs` contai
 
 ## Downloads
 
-`content/releases.json` is a reviewed snapshot of the real public GitHub Release. The initial version is `v0.0.1`: macOS Apple Silicon and Android APKs. Other platforms are described as in progress, with no invented download links.
+The home and download pages (both languages), `/release.json` and the account center's Connector packages are rendered by the Worker from the Cloudflare KV namespace `openplayx-web-releases` (binding `RELEASES`, keys `release/openplayx` and `release/connector`). After a published production release, the Jenkins release job writes the new manifest there (`build/scripts/release/website_manifest.py`), so the site shows the new version within about a minute without a redeploy. The Worker validates the value (version tag, GitHub release URLs, macOS ZIP and Android ARM64 APK present) and otherwise falls back to the bundled snapshots `content/releases.json` and `content/connector-release.json`.
+
+Refresh the snapshots occasionally so the fallback stays recent:
 
 ```sh
 npm run refresh:releases     # reads GitHub's public API; optional GITHUB_TOKEN stays in environment
@@ -41,7 +43,7 @@ npm run build
 npm run check
 ```
 
-Review architecture names and installation notes when refreshing. Publishing does not happen just because GitHub has a new release; build and deploy the reviewed website snapshot. Installers remain hosted on GitHub, not copied to Cloudflare.
+Installers remain hosted on GitHub, not copied to Cloudflare.
 
 ## Cloudflare deployment
 

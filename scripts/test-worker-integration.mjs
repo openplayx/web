@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {mkdir,rm} from 'node:fs/promises';
+import {mkdir,rm,readFile} from 'node:fs/promises';
 import {build} from 'esbuild';
 import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
 import {accountUIIntegration} from '../test/account-ui-integration.mjs';
@@ -7,7 +7,7 @@ const folder=new URL('../.wrangler/web-integration/',import.meta.url);await mkdi
 const bundle=await build({metafile:true,entryPoints:[new URL('../src/worker.mjs',import.meta.url).pathname],bundle:true,format:'esm',platform:'browser',target:'es2022',outfile:scriptPath});
 assert.ok(!Object.keys(bundle.metafile.inputs).some(path=>/admin(?:-ui|-worker)?\.mjs$/.test(path)),'Public Web bundle must not contain admin pages');
 let registration,logins=0;const profile={userId:'user_fixture',email:'fixture@example.com',displayName:'Fixture',emailVerifiedAt:'2026-01-01'};
-const mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:'web-test',modules:true,scriptPath,compatibilityDate:'2026-11-15',durableObjects:{ACCOUNT_SESSIONS:{className:'AccountSession',useSQLite:true}},serviceBindings:{
+const mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:'web-test',modules:true,scriptPath,compatibilityDate:'2026-11-15',durableObjects:{ACCOUNT_SESSIONS:{className:'AccountSession',useSQLite:true}},kvNamespaces:{RELEASES:'web-releases'},serviceBindings:{
  ASSETS:async()=>new Response('existing marketing assets'),
  API:async request=>{
   const path=new URL(request.url).pathname;assert.equal(new URL(request.url).origin,'https://api.openplayx.com');assert.equal(request.headers.get('Cookie'),null);
@@ -30,6 +30,11 @@ try{
  const id=cookie.split('=')[1],hash=Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(id))).toString('hex');await mf.unsafeEvictDurableObject('web-test','AccountSession',{name:hash});
  const session=await mf.dispatchFetch('https://openplayx.com/account/api/session',{headers:{Cookie:cookie}});assert.equal((await session.json()).user.userId,profile.userId);
  assert.equal((await mf.dispatchFetch('https://openplayx.com/account/api/services/service_fixture',{method:'DELETE',headers:{Cookie:cookie,Origin:'https://openplayx.com','Content-Type':'application/json'},body:'{}'})).status,404);
- await accountUIIntegration((url,init)=>mf.dispatchFetch(url,init));assert.equal(await (await mf.dispatchFetch('https://openplayx.com/')).text(),'existing marketing assets');
+ await accountUIIntegration((url,init)=>mf.dispatchFetch(url,init));assert.equal(await (await mf.dispatchFetch('https://openplayx.com/ecosystem/')).text(),'existing marketing assets');
+ // Release pages read the KV manifest in workerd (bundled snapshot until Jenkins writes one).
+ const snapshot=JSON.parse(await readFile(new URL('../content/releases.json',import.meta.url),'utf8'));
+ assert.ok((await (await mf.dispatchFetch('https://openplayx.com/download/')).text()).includes(snapshot.tag));
+ await (await mf.getKVNamespace('RELEASES')).put('release/openplayx',JSON.stringify(snapshot).replaceAll(snapshot.tag,'v9.8.7'));
+ assert.ok((await (await mf.dispatchFetch('https://openplayx.com/zh/download/')).text()).includes('v9.8.7'));
  console.log('workerd + persistent account session + browser DOM: separate login, reload recovery, opaque credentials, read-only services, CSRF, logout and admin isolation passed; API and emails mocked.');
 }finally{await mf.dispose();await rm(folder,{recursive:true,force:true})}

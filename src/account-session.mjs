@@ -12,6 +12,8 @@ function endpoint(path,method){
  if(path==='/profile'&&['GET','PATCH'].includes(method))return '/v1/auth/me';
  if(['/services','/connectors','/devices'].includes(path)&&method==='GET')return '/v1/relay/me'+path;
  if(path==='/connectors/approve'&&method==='POST')return '/v1/relay/me/connector-bindings/approve';
+ if(path==='/connectors/enrollments'&&['GET','POST'].includes(method))return '/v1/relay/me/connector-enrollments';
+ if(/^\/connectors\/enrollments\/enrollment_[A-Za-z0-9_-]{1,100}$/.test(path)&&method==='DELETE')return '/v1/relay/me/connector-enrollments/'+path.slice('/connectors/enrollments/'.length);
  if(/^\/(connectors|devices)\/[A-Za-z0-9_-]{1,100}$/.test(path)&&method==='DELETE')return '/v1/relay/me'+path;
  if(/^\/operations\/operation_[A-Za-z0-9_-]{1,100}$/.test(path)&&method==='GET')return '/v1/relay'+path;
  return null;

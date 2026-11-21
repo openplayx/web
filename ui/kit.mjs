@@ -17,6 +17,7 @@ const kitModule=()=>[
   'export const basecoatCSS='+JSON.stringify(read('vendor/basecoat/basecoat.cdn.min.css'))+';',
   'export const themeCSS='+JSON.stringify(read('opx-theme.css'))+';',
   'export const themeJS='+JSON.stringify(read('opx-theme.js'))+';',
+  'export const i18nJS='+JSON.stringify(read('opx-i18n.js'))+';',
   'export const logoSVG='+JSON.stringify(read('opx-logo.svg').trim())+';',
   ''
 ].join('\n');

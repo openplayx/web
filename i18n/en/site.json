@@ -1,0 +1,302 @@
+{
+  "lang": "en",
+  "locale": "en_US",
+  "language": "中文",
+  "languageLabel": "Switch to Chinese",
+  "title": "OpenPlayX — Your media. Your rules.",
+  "description": "A local-first media player with a personal library, an AI assistant and an open MCP ecosystem. Download OpenPlayX for macOS and Android.",
+  "nav": [
+    "Features",
+    "Ecosystem",
+    "Contribute"
+  ],
+  "download": "Download",
+  "github": "View on GitHub",
+  "eyebrow": "YOUR LIBRARY. MORE POSSIBILITIES.",
+  "hero": [
+    "Your media.",
+    "Your rules."
+  ],
+  "intro": "From the files on your Mac to the collection on your NAS. One place to watch, discover, and do a little more with AI.",
+  "primary": "Get OpenPlayX",
+  "secondary": "Explore the experience",
+  "release": "Early access",
+  "releaseDetail": "macOS Apple Silicon & Android",
+  "previewLabel": "A look at the experience",
+  "previewNote": "Illustrative interface · original sample artwork",
+  "previewTabs": [
+    "Library",
+    "AI assistant",
+    "Sources"
+  ],
+  "previewTitle": "Something worth watching.",
+  "previewSub": "A collection that feels like yours.",
+  "previewSidebar": [
+    "Home",
+    "Sources",
+    "AI",
+    "Settings"
+  ],
+  "continue": "CONTINUE WATCHING",
+  "allMedia": "YOUR COLLECTION",
+  "posters": [
+    "AFTERGLOW",
+    "ORBIT",
+    "THE QUIET NORTH"
+  ],
+  "posterMeta": [
+    "Adventure · 2026",
+    "Sci-fi · 2026",
+    "Documentary · 2026"
+  ],
+  "aiPrompt": "Make subtitles for this episode.",
+  "aiReply": "Extract audio, choose a recognition backend, then save the subtitle alongside your video.",
+  "aiHint": "Illustrative workflow. You choose the model and services.",
+  "aiTask": "Audio → speech recognition → subtitles",
+  "sourceTitle": "Your files, wherever they live.",
+  "sourceSub": "Local folders, network storage, or the media server you already use.",
+  "strip": [
+    "Local first",
+    "Powered by libVLC",
+    "Bring your own model",
+    "Extend with MCP"
+  ],
+  "featuresKicker": "BUILT AROUND YOUR MEDIA",
+  "featuresTitle": "A player. A library.\nRoom to make it yours.",
+  "featuresIntro": "Start with a video. Connect a collection. Add capabilities when you want them.",
+  "feature1": [
+    "Everything, in its place.",
+    "Turn local folders and network sources into a browsable library, with artwork, film and episode details, and a place to pick up where you left off."
+  ],
+  "feature2": [
+    "Press play. Stay in control.",
+    "A Flutter interface built around libVLC. Playback speed, audio tracks, subtitles, and familiar controls, without rebuilding your media collection."
+  ],
+  "feature3": [
+    "An assistant with useful tools.",
+    "Connect your own model API. Let the agent search media or start subtitle and media-processing tasks through the app’s tools. You stay in the loop for actions that need confirmation."
+  ],
+  "feature4": [
+    "Local when it matters.",
+    "Your library and playback work without an AI account. Use on-device speech recognition, or choose an external service when you need it."
+  ],
+  "libraryLabel": "A PERSONAL LIBRARY",
+  "featureBadge": "Your files. Your choice.",
+  "sourceKicker": "NO NEED TO START OVER",
+  "sourceHeadline": "Meet your media\nwhere it already lives.",
+  "sourceIntro": "Keep your folders, NAS and media server. OpenPlayX connects to the setup you already have.",
+  "sourceNote": "Capabilities vary by source. Connect your own accounts and servers.",
+  "aiKicker": "MORE THAN PLAYBACK",
+  "aiHeadline": "A little less clicking.\nA little more doing.",
+  "aiIntro": "The agent uses your model and the app’s tools. Search, inspect, extract audio, or generate subtitles—without turning your homepage into a chat window.",
+  "aiSteps": [
+    [
+      "01",
+      "Bring your model",
+      "Set an API endpoint, model and key."
+    ],
+    [
+      "02",
+      "Use the built-in tools",
+      "Media and local processing capabilities are available by default."
+    ],
+    [
+      "03",
+      "Connect something new",
+      "Add an MCP service to discover its tools."
+    ]
+  ],
+  "ecoKicker": "AN OPEN ECOSYSTEM",
+  "ecoTitle": "Small services.\nBigger possibilities.",
+  "ecoIntro": "Independent MCP services for search, metadata, recognition and downloads. Use them with OpenPlayX—or another compatible MCP client.",
+  "ecoLink": "Explore the ecosystem",
+  "ecoMeta": "Independently deployable · Public repositories",
+  "serviceNames": {
+    "mcp-tavily": [
+      "Web search",
+      "Search the web through Tavily."
+    ],
+    "mcp-douban": [
+      "Film discovery",
+      "Charts, titles and credits from Douban."
+    ],
+    "mcp-imdb": [
+      "Film metadata",
+      "Search a local copy of IMDb datasets."
+    ],
+    "mcp-yt-dlp": [
+      "Video downloads",
+      "Inspect a URL and download on your server."
+    ],
+    "mcp-piratebay": [
+      "Torrent search",
+      "Search a configured external index."
+    ],
+    "mcp-qbittorrent": [
+      "Download control",
+      "Plan and manage server-side downloads."
+    ],
+    "openplayx-asr": [
+      "Speech recognition",
+      "Audio to timestamped text with whisper.cpp."
+    ]
+  },
+  "communityKicker": "BUILD IT WITH US",
+  "communityTitle": "A better player\nstarts with you.",
+  "communityIntro": "OpenPlayX is evolving. Try an early build, share what feels off, or help make the next part better.",
+  "communityActions": [
+    [
+      "Report an issue",
+      "A clear reproduction is a great contribution.",
+      "bug"
+    ],
+    [
+      "Build an integration",
+      "Create a service for the MCP ecosystem.",
+      "puzzle"
+    ],
+    [
+      "Contribute code",
+      "Improve playback, accessibility or platform support.",
+      "code"
+    ]
+  ],
+  "communityLink": "Find your way to contribute",
+  "faqTitle": "A few things to know.",
+  "faq": [
+    [
+      "Does OpenPlayX include movies or shows?",
+      "No. It is a player for your own media and services you connect. OpenPlayX does not provide a bundled film or TV catalogue."
+    ],
+    [
+      "Do I need AI to use it?",
+      "No. Playback and your local library work without a model account. Add your own model API and optional services when you want AI features."
+    ],
+    [
+      "Which platforms can I download?",
+      "The current v0.0.1 release includes a macOS Apple Silicon ZIP and Android APKs. iOS, Windows and Linux are still being developed or validated; there are no download buttons for unavailable packages."
+    ],
+    [
+      "Is it open source?",
+      "Original main app code is licensed under MIT. Builds linking sing-box must also comply with its GPL terms. Ecosystem services have their own MIT or GPL licenses, and some app build dependencies remain private. Check each repository and the app’s third-party notices for redistribution and corresponding-source requirements."
+    ],
+    [
+      "Can I sync everything between devices?",
+      "Cross-device library and playback sync is a design goal, not a finished feature today. Local playback, source access and the current AI tools are available independently."
+    ]
+  ],
+  "closingTitle": "Your next watch starts here.",
+  "closingText": "Bring your collection. Make yourself at home.",
+  "footerLine": "An independent player. An open ecosystem.",
+  "footerProject": "Project",
+  "footerResources": "Resources",
+  "footerLegal": "Good to know",
+  "footerLinks": [
+    "Downloads",
+    "Ecosystem",
+    "Contribute",
+    "GitHub",
+    "Release notes",
+    "Report an issue",
+    "Privacy",
+    "Project status"
+  ],
+  "footerBottom": "Built with Flutter, libVLC and a community of open-source projects.",
+  "downloadTitle": "Find your next player.",
+  "downloadIntro": "Early builds for curious people. Download the package for your device, and help us make it better.",
+  "downloadKicker": "DOWNLOAD OPENPLAYX",
+  "currentRelease": "Current release",
+  "releaseNotes": "Release notes",
+  "checksums": "Verify checksums",
+  "macTitle": "macOS",
+  "macDesc": "For Macs with Apple Silicon. Download the ZIP, extract it, then move OpenPlayX to Applications.",
+  "macButton": "Download for Mac",
+  "macNote": "Early build · Apple Silicon only",
+  "androidTitle": "Android",
+  "androidDesc": "Download an APK directly from our GitHub release. Android may ask you to allow installation from your browser.",
+  "androidButton": "Download ARM64 APK",
+  "androidNote": "Android 10+ · Most modern devices",
+  "moreBuilds": "Other Android packages",
+  "futureTitle": "More screens, in progress.",
+  "futureText": "iOS, Windows and Linux have development work in progress. Apple TV and Android TV are not available as validated releases. Follow GitHub for progress.",
+  "follow": "Follow development",
+  "installTitle": "Before you install",
+  "installNotes": [
+    "These are early builds. Feature and device support are still being refined.",
+    "The Mac package is distributed outside the App Store. macOS may show a security prompt; verify the source and checksums before installing.",
+    "Your media stays with your sources. AI or external tools may send selected information to the services you configure.",
+    "Already comfortable with the terminal? Read the repository first: some current build dependencies are private."
+  ],
+  "ecoPageTitle": "A player that grows\nwith your ideas.",
+  "ecoPageIntro": "A collection of small, focused MCP services. Self-host the capabilities you need, connect a compatible client, and keep control of your setup.",
+  "connectTitle": "Connect in three steps.",
+  "connectSteps": [
+    [
+      "Deploy a service",
+      "Follow its repository for runtime, configuration and license details."
+    ],
+    [
+      "Add it to OpenPlayX",
+      "Open AI → External capabilities. Enter the service URL and authentication."
+    ],
+    [
+      "Discover its tools",
+      "OpenPlayX probes the MCP endpoint and lists supported tools for the agent."
+    ]
+  ],
+  "repoLink": "Repository",
+  "license": "License",
+  "ecoNotice": "These are independent services, not bundled media sources. Third-party data and services have separate usage terms. MCP compatibility depends on the supported transport, authentication and schema. Live TV is outside the current scope.",
+  "contributeTitle": "Make the next\nversion better.",
+  "contributeIntro": "Good software is a collection of thoughtful contributions. Yours could be a bug report, a translation, a better interaction—or a new capability.",
+  "contributeCards": [
+    [
+      "Test a real workflow",
+      "Tell us your device, version, media source, steps and expected result. A small, reproducible issue helps more than “it does not work”.",
+      "Open an issue"
+    ],
+    [
+      "Improve the app",
+      "Pick a focused change. For a larger feature, discuss the scope in an issue first. Include the platform and validation you actually performed.",
+      "Explore the app repository"
+    ],
+    [
+      "Build a capability",
+      "Create or improve an independently deployable MCP service. Keep credentials out of tools and logs, document its schema, and add useful tests.",
+      "Explore MCP services"
+    ],
+    [
+      "Make it more welcoming",
+      "Help with translations, accessibility, documentation and platform testing. You do not need to write a new feature to make a real difference.",
+      "Start a conversation"
+    ]
+  ],
+  "contributeNote": "App and service licenses are not interchangeable. Check the relevant repository before contributing or redistributing. Never put credentials, private media paths or copyrighted sample files in a public issue.",
+  "privacyTitle": "A small website. A clear boundary.",
+  "privacyIntro": "This website introduces OpenPlayX. It is not the player and does not connect to your media library.",
+  "privacyItems": [
+    [
+      "On this website",
+      "This website uses PostHog US for usage analytics, covering page visits, referral domains and campaigns, download clicks, browser/device and screen information, approximate IP-derived location, page performance, errors, interaction heatmaps and session replay. Inputs and file-upload controls are masked or blocked; request bodies and headers are not recorded. Raw IP addresses are discarded before event storage. Anonymous browser profiles help measure repeat visits. We do not add advertising trackers, account registration or a mailing list. Cloudflare serves the site and may process connection and security information under its own policies."
+    ],
+    [
+      "When you download",
+      "Installers are hosted on GitHub Releases. Following a download or repository link takes you to GitHub and its policies apply."
+    ],
+    [
+      "Inside the app",
+      "Local playback is separate from AI. Models and external services may receive information you choose to use with them. The app currently stores configuration and credentials in its local configuration database; it does not promise end-to-end encryption or automatic cloud sync."
+    ]
+  ],
+  "notFoundTitle": "This frame is missing.",
+  "notFoundText": "That page does not exist. Let’s get you back to the collection.",
+  "backHome": "Back to home",
+  "menu": "Open navigation",
+  "closeMenu": "Close navigation",
+  "skip": "Skip to content",
+  "sample": "SAMPLE LIBRARY",
+  "appLabel": "Illustrative OpenPlayX interface",
+  "navLabel": "Main navigation",
+  "account": "Account",
+  "themeLabel": "Toggle theme"
+}

@@ -13,6 +13,13 @@ its own stylesheet and only reuses the colors.
   `?theme=` or `localStorage["opx-theme"]`), turns any `<button data-theme-toggle>` into a
   system → light → dark switch (icon and label filled in; add `data-theme-toggle-text` to show
   the label too) and drives `.sidebar` on narrow screens.
+- **Language**: `opx-i18n.js` is the English / Simplified Chinese runtime. Each project keeps
+  its strings in an `i18n/<locale>/<namespace>.json` folder (`en`, `zh-CN`) and registers them
+  with `opxI18n.register({en, 'zh-CN'})`. Language comes from `?lang=`, then
+  `localStorage["opx-lang"]`, then the browser languages, defaulting to English. Mark static
+  markup with `data-i18n="key"` / `data-i18n-attr="placeholder:key"`, call `opxI18n.t(key, vars)`
+  from scripts (`{name}` placeholders), and add `<button data-lang-toggle>` for the EN / 中文
+  switch. Re-render on the `opx:langchange` event.
 - **Logo**: `opx-logo.svg`, the orange mark. Orange is used for the logo only.
 
 Load order in `<head>`:
@@ -20,6 +27,7 @@ Load order in `<head>`:
 ```html
 <link rel="stylesheet" href="…/basecoat.cdn.min.css">
 <link rel="stylesheet" href="…/opx-theme.css">
+<script src="…/opx-i18n.js"></script>
 <script src="…/opx-theme.js"></script>
 ```
 

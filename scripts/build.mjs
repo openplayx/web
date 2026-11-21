@@ -15,7 +15,7 @@ for (const lang of ['en', 'zh']) {
   for (const page of pages) {
     const path = `${lang === 'zh' ? 'zh/' : ''}${page ? page + '/' : ''}`;
     await mkdir(new URL(path, dist), { recursive: true });
-    await writeFile(new URL(`${path}index.html`, dist), render(lang, page).replaceAll('v0.0.1', releases.tag));
+    await writeFile(new URL(`${path}index.html`, dist), render(lang, page));
   }
 }
 await writeFile(new URL('404.html', dist), render('en', '', true));

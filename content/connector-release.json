@@ -1,0 +1,80 @@
+{
+  "tag": "v0.1.7",
+  "url": "https://github.com/openplayx/openplayx-connector/releases/tag/v0.1.7",
+  "checkedAt": "2026-11-21",
+  "assets": [
+    {
+      "platform": "linux-amd64",
+      "label": "Linux x86_64",
+      "name": "openplayx-connector-0.1.7-linux-amd64-51e324672b.tar.gz",
+      "url": "https://github.com/openplayx/openplayx-connector/releases/download/v0.1.7/openplayx-connector-0.1.7-linux-amd64-51e324672b.tar.gz",
+      "bytes": 12180082,
+      "sha256": "559b0f17740041b95558a50ddfc03fc6dbca7181ac5e77f110bcb23943884acf"
+    },
+    {
+      "platform": "linux-arm64",
+      "label": "Linux ARM64",
+      "name": "openplayx-connector-0.1.7-linux-arm64-51e324672b.tar.gz",
+      "url": "https://github.com/openplayx/openplayx-connector/releases/download/v0.1.7/openplayx-connector-0.1.7-linux-arm64-51e324672b.tar.gz",
+      "bytes": 10852009,
+      "sha256": "de62088007f42018cb83ddb1ceb516913ac47ea78271029bf30d9d4e0bd51875"
+    },
+    {
+      "platform": "linux-armv7",
+      "label": "Linux ARMv7（树莓派 / NAS）",
+      "name": "openplayx-connector-0.1.7-linux-armv7-51e324672b.tar.gz",
+      "url": "https://github.com/openplayx/openplayx-connector/releases/download/v0.1.7/openplayx-connector-0.1.7-linux-armv7-51e324672b.tar.gz",
+      "bytes": 11232106,
+      "sha256": "25156e9bb58e55e4cecf18a0a6422df5acdcbbf26bf4cede38c8a860b8b2ff49"
+    },
+    {
+      "platform": "linux-armv6",
+      "label": "Linux ARMv6",
+      "name": "openplayx-connector-0.1.7-linux-armv6-51e324672b.tar.gz",
+      "url": "https://github.com/openplayx/openplayx-connector/releases/download/v0.1.7/openplayx-connector-0.1.7-linux-armv6-51e324672b.tar.gz",
+      "bytes": 11246466,
+      "sha256": "0cc38ed27d3e4eeb3c77b8a3803e525ba4bd5b4c591f80fb6e037448e32d3d8b"
+    },
+    {
+      "platform": "linux-mips-softfloat",
+      "label": "Linux MIPS（路由器）",
+      "name": "openplayx-connector-0.1.7-linux-mips-softfloat-51e324672b.tar.gz",
+      "url": "https://github.com/openplayx/openplayx-connector/releases/download/v0.1.7/openplayx-connector-0.1.7-linux-mips-softfloat-51e324672b.tar.gz",
+      "bytes": 10897254,
+      "sha256": "a963ae03d01910f5a75e7d7e9908ae0023aa1b2d532aac1816076a20c1f4d459"
+    },
+    {
+      "platform": "linux-mipsle-softfloat",
+      "label": "Linux MIPSLE（路由器）",
+      "name": "openplayx-connector-0.1.7-linux-mipsle-softfloat-51e324672b.tar.gz",
+      "url": "https://github.com/openplayx/openplayx-connector/releases/download/v0.1.7/openplayx-connector-0.1.7-linux-mipsle-softfloat-51e324672b.tar.gz",
+      "bytes": 10691844,
+      "sha256": "520bca10d5380cb0125b1843ff5ed2ed3794bfbf31f97521badfc7fa2aef0cac"
+    },
+    {
+      "platform": "darwin-arm64",
+      "label": "macOS Apple Silicon",
+      "name": "openplayx-connector-0.1.7-darwin-arm64-51e324672b.tar.gz",
+      "url": "https://github.com/openplayx/openplayx-connector/releases/download/v0.1.7/openplayx-connector-0.1.7-darwin-arm64-51e324672b.tar.gz",
+      "bytes": 10788746,
+      "sha256": "c8bd795ba2d4186f68f1a9abaa95434ea06a315514a8a0b2ccc8cc27fc833100"
+    },
+    {
+      "platform": "darwin-amd64",
+      "label": "macOS Intel",
+      "name": "openplayx-connector-0.1.7-darwin-amd64-51e324672b.tar.gz",
+      "url": "https://github.com/openplayx/openplayx-connector/releases/download/v0.1.7/openplayx-connector-0.1.7-darwin-amd64-51e324672b.tar.gz",
+      "bytes": 11836029,
+      "sha256": "5488c0a618e7c61ea3442c1b2149caa0fe5e4a209004cca77bf9492be2190277"
+    },
+    {
+      "platform": "freebsd-amd64",
+      "label": "FreeBSD x86_64",
+      "name": "openplayx-connector-0.1.7-freebsd-amd64-51e324672b.tar.gz",
+      "url": "https://github.com/openplayx/openplayx-connector/releases/download/v0.1.7/openplayx-connector-0.1.7-freebsd-amd64-51e324672b.tar.gz",
+      "bytes": 11486038,
+      "sha256": "fef3d5900ec4fdd755328a7eeb05d8ac51b45f7c085726f7e789270ad19873ff"
+    }
+  ],
+  "checksums": "https://github.com/openplayx/openplayx-connector/releases/download/v0.1.7/SHA256SUMS"
+}

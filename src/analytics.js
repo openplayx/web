@@ -1,7 +1,15 @@
 import posthog from 'posthog-js/full/no-external';
 import config from '../content/analytics.json';
 import campaigns from '../content/campaigns.json';
-import release from '../content/releases.json';
+// Download links point at GitHub release assets; the tag and platform come from the URL,
+// so clicks are attributed correctly whichever release the Worker rendered.
+const androidArch={arm64:'ARM64',armv7:'ARMv7',x64:'x86_64'};
+function releaseAsset(url){
+  const m=url.hostname==='github.com'&&url.pathname.match(/^\/openplayx\/openplayx\/releases\/download\/([^/]+)\/([^/]+)$/);if(!m)return null;
+  const [,tag,name]=m,android=name.match(/-android(?:-(arm64|armv7|x64))?-[0-9a-f]{7,40}\.apk$/);
+  if(/-macos-arm64-[0-9a-f]{7,40}\.zip$/.test(name))return {tag,name,platform:'macos',architecture:'Apple Silicon'};
+  return android?{tag,name,platform:'android',architecture:androidArch[android[1]]||'Universal'}:null;
+}
 
 const firstKey = 'opx-analytics-first-v1';
 const sessionKey = 'opx-analytics-session-v1';
@@ -115,10 +123,10 @@ function begin() {
 document.addEventListener('click',event=>{
   const link=event.target.closest?.('a[href]');if(!link)return;
   const url=new URL(link.href,location.href);
-  const asset=release.assets.find(asset=>asset.url===url.href);
+  const asset=releaseAsset(url);
   const position=link.closest('.site-header')?'header':link.closest('.site-footer')?'footer':'content';
   if(asset)capture('download_clicked',{target_platform:asset.platform,architecture:asset.architecture,
-    release_tag:release.tag,asset_name:asset.name,repository:'openplayx/openplayx',button_position:position});
+    release_tag:asset.tag,asset_name:asset.name,repository:'openplayx/openplayx',button_position:position});
   else if(link.matches('[data-language]'))capture('language_changed',{from_locale:zh?'zh':'en',to_locale:zh?'en':'zh'});
   else if(url.hostname==='github.com'&&url.pathname==='/openplayx/openplayx')capture('repository_clicked',{repository:'openplayx/openplayx',button_position:position});
   else if(url.pathname.includes('/contribute/')||url.hostname==='github.com'&&url.pathname.includes('/issues'))capture('contribute_clicked',{action:'contribute',button_position:position});

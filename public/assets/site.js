@@ -23,6 +23,10 @@ for (const link of document.querySelectorAll('[data-language]')) {
   const destination = new URL(link.href);
   destination.hash = window.location.hash;
   link.href = destination.href;
+  // Remember the choice for the account center and other OpenPlayX web tools (ui/opx-i18n.js).
+  link.addEventListener('click', () => {
+    try { localStorage.setItem('opx-lang', link.getAttribute('hreflang') === 'zh-CN' ? 'zh-CN' : 'en'); } catch {}
+  });
 }
 const tabs = [...document.querySelectorAll('[data-preview]')];
 function activate(tab, focus = false) {

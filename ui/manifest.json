@@ -2,13 +2,14 @@
   "kit": "openplayx-ui",
   "basecoat": "basecoat-css@1.1.0",
   "files": {
-    "README.md": "cc278ab44c09d4e75f2dc269fe25702b5741607842fa1b85e533eb6608286e80",
-    "kit.mjs": "8ba0b0b0085943379951b5277146ebfdb6472d396db12a811c4b6c35671f3016",
+    "README.md": "54f1e3b7b1331fce244638520bccb696789059054f9114e16b972f7cb25d6722",
+    "kit.mjs": "91b8499d8c87aad2d506df39ae22b5416e467ebb83e6ff44e1d74648a09d84d6",
+    "opx-i18n.js": "f5e6da48d6c7a9e929a991406e6613cb9f6672a2059ce183d2e12c86c60fc798",
     "opx-logo.svg": "b99b457908f96bc811f0b75e689c970c1a614500b4d37de6b0d8913568633af1",
     "opx-theme.css": "3baa3325d3b327c5787990adb4d66f1813c93a36ae3321781b926729b954b712",
-    "opx-theme.js": "fe5125c48f1a53fc09e1ae1d79b634dcee6b31f50341d04ab7088dc3e960f51a",
+    "opx-theme.js": "610d6f3e3efde4137a8d04473ca53a6d5c8edbfe9df0a3f66ed096a5a0aeeb95",
     "vendor/basecoat/LICENSE.md": "160a6cea26ff1931297957499ab739e94c4bc79ecea18b490c9f533fa76ace78",
     "vendor/basecoat/basecoat.cdn.min.css": "e6354ef1e99adc94257e579507f18cb00307a08cc2b976deb320368eb7c28e70",
-    "ui-kit.mjs": "c5e2913546ba187fd7fff544e7d2045b9ef1e4226e604e526fa64805bed1fcd5"
+    "ui-kit.mjs": "1e710e720ea7db684804504b312dd66ea585f44b87d76b5d883ba03fcbb86768"
   }
 }

@@ -35,3 +35,12 @@ test('concurrent requests refresh exactly once and logout removes only this Web 
  const responses=await Promise.all([h.request('/services',{cookie:first.cookie}),h.request('/connectors',{cookie:first.cookie})]);assert.ok(responses.every(r=>r.status===200));assert.equal(h.refreshes(),1);
  const logout=await h.request('/logout',{method:'POST',cookie:first.cookie,body:{}});assert.equal(logout.status,200);assert.match(logout.headers.get('Set-Cookie'),/Max-Age=0/);assert.deepEqual(await (await h.request('/session',{cookie:first.cookie})).json(),{authenticated:false});assert.equal((await h.request('/session',{cookie:other.cookie})).status,200);assert.ok(stores[1].store.get('session'));
 });
+test('Connector pre-registration routes map to the Relay enrollment API only',async()=>{
+ const h=harness();const {cookie}=await h.login();
+ assert.equal((await h.request('/connectors/enrollments',{cookie})).status,200);assert.equal(h.calls.at(-1).path,'/v1/relay/me/connector-enrollments');
+ assert.equal((await h.request('/connectors/enrollments',{cookie,method:'POST',body:{name:'NAS'}})).status,200);assert.deepEqual([h.calls.at(-1).path,h.calls.at(-1).method,h.calls.at(-1).body],['/v1/relay/me/connector-enrollments','POST',{name:'NAS'}]);
+ assert.equal((await h.request('/connectors/enrollments/enrollment_abc-1',{cookie,method:'DELETE',body:{}})).status,202);assert.equal(h.calls.at(-1).path,'/v1/relay/me/connector-enrollments/enrollment_abc-1');
+ const before=h.calls.length;
+ for(const [path,method] of [['/connectors/enrollments','DELETE'],['/connectors/enrollments/enrollment_a','GET'],['/connectors/enrollments/connector_a','DELETE'],['/connectors/enrollments/enrollment_a/x','DELETE']]){const r=await h.request(path,{cookie,method,body:method==='GET'?undefined:{}});if(r.status!==404)assert.notEqual(h.calls.at(-1).path.includes('connector-enrollments'),true,path);}
+ assert.ok(h.calls.slice(before).every(c=>!c.path.includes('connector-enrollments')));
+});
