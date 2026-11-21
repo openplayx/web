@@ -1,9 +1,9 @@
-import posthog from 'posthog-js';
+import posthog from 'posthog-js/full/no-external';
 import config from '../content/analytics.json';
 import campaigns from '../content/campaigns.json';
 import release from '../content/releases.json';
 
-const choiceKey = 'opx-analytics-choice-v1';
+const choiceKey = 'opx-analytics-choice-v2';
 const firstKey = 'opx-analytics-first-v1';
 const sessionKey = 'opx-analytics-session-v1';
 const zh = document.documentElement.lang.startsWith('zh');
@@ -36,13 +36,32 @@ const safeKeys = new Set(['origin','environment','schema_version','locale','page
   'first_utm_campaign','first_utm_content','target_platform','architecture','release_tag','asset_name',
   'repository','button_position','from_locale','to_locale','action',
   'token','distinct_id','$distinct_id','$device_id','$session_id','$window_id','$lib','$lib_version',
-  '$process_person_profile','$geoip_disable']);
-const events = new Set(['$pageview','download_page_viewed','download_clicked','repository_clicked','contribute_clicked','language_changed']);
+  '$process_person_profile','$geoip_disable',
+  '$browser','$browser_version','$os','$os_version','$device_type','$device',
+  '$screen_height','$screen_width','$viewport_height','$viewport_width',
+  '$browser_language','$browser_language_prefix','$timezone','$timezone_offset',
+  '$host','$title','$referring_domain','$initial_referring_domain',
+  '$prev_pageview_duration','$prev_pageview_pathname','$prev_pageview_id','$pageview_id',
+  '$event_type','$elements','$elements_chain','$el_text','$ce_version',
+  '$heatmap_data','$snapshot_data','$snapshot_bytes','$snapshot_host',
+  '$exception_list','$exception_type','$exception_message','$exception_level',
+  '$exception_source','$exception_fingerprint','$exception_personURL',
+  '$exception_is_synthetic','$exception_handled']);
+const events = new Set(['$pageleave','$autocapture','$$heatmap','$snapshot','$web_vitals','$exception','$rageclick','$dead_click','$pageview','download_page_viewed','download_clicked','repository_clicked','contribute_clicked','language_changed']);
+// Strip query strings/fragments from URLs, including replay metadata and heatmap keys.
+function scrub(value) {
+  if (Array.isArray(value)) return value.map(scrub);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k,v])=>[cleanUrl(k),scrub(v)]));
+  return typeof value === 'string' ? value.replace(/https?:\/\/[^\s\"<>]+/g, cleanUrl) : value;
+}
+function cleanUrl(value) {
+  try { const url=new URL(value); if (!['http:','https:'].includes(url.protocol)) return value; return url.origin+url.pathname; } catch { return value; }
+}
 function capture(event, properties = {}) {
   if (!allowed || !ready) return;
   try {
     posthog.capture(event, {origin:'web',environment,schema_version:1,
-      locale:zh?'zh':'en',page_type:page,site_version:'2026-11-19',
+      locale:zh?'zh':'en',page_type:page,site_version:'2026-11-21',
       ...sessionTouch,...Object.fromEntries(Object.entries(firstTouch || {}).map(([k,v])=>['first_'+k,v])),
       ...properties});
   } catch { /* Download/navigation never waits for analytics. */ }
@@ -60,24 +79,35 @@ function begin() {
   firstTouch=first.touch;sessionTouch=session.touch;
   if (!ready) {
     posthog.init(config.projectToken, {
-      api_host:config.host,debug:environment==='validation',autocapture:false,capture_pageview:false,capture_pageleave:false,
-      disable_session_recording:true,disable_surveys:true,capture_performance:false,
-      capture_heatmaps:false,capture_exceptions:false,person_profiles:'never',
-      advanced_disable_flags:true,advanced_disable_feature_flags:true,
+      api_host:config.host,debug:environment==='validation',autocapture:{capture_copied_text:false},capture_pageview:false,capture_pageleave:true,
+      disable_session_recording:false,disable_surveys:true,capture_performance:{web_vitals:true,network_timing:true},
+      capture_heatmaps:true,capture_exceptions:true,person_profiles:'always',
+      session_recording:{sampleRate:1,maskAllInputs:true,blockSelector:'input[type=file], .ph-no-capture',
+        recordHeaders:false,recordBody:false,recordCrossOriginIframes:false,
+        maskAttributeFn:(name,value)=>['href','src','action'].includes(name)?cleanUrl(value):value,
+        maskCapturedNetworkRequestFn:data=>({...data,url:cleanUrl(data.url)})},
+      enable_recording_console_log:false,
+      advanced_disable_flags:false,advanced_disable_feature_flags:true,
       advanced_disable_feature_flags_on_first_load:true,disable_external_dependency_loading:true,
       persistence:'localStorage',bootstrap:{},
       before_send(event) {
         if (!allowed || !events.has(event.event)) return null;
-        event.properties=Object.fromEntries(Object.entries(event.properties || {}).filter(([k])=>safeKeys.has(k)));
+        event.properties=Object.fromEntries(Object.entries(event.properties || {}).filter(([k])=>safeKeys.has(k)||/^\$web_vitals_(LCP|CLS|INP|FCP|TTFB)_(value|event)$/.test(k)));
+        event.properties=scrub(event.properties);
+        if(event.event==='$exception') event.properties.$exception_type=event.properties.$exception_list?.[0]?.type || 'Error';
+        Object.assign(event.properties,{origin:'web',environment,schema_version:1,locale:zh?'zh':'en',page_type:page,site_version:'2026-11-21'});
+        const referrer=(()=>{try{return new URL(document.referrer);}catch{return null;}})();
+        if(referrer){event.properties.$referrer=referrer.origin;event.properties.$referring_domain=referrer.hostname;}
         event.properties.$current_url = 'https://openplayx.com'+route;
         event.properties.$pathname = route;
-        event.properties.$geoip_disable = true;
+        event.properties.$geoip_disable = false;
         return event;
       },
     });
     ready=true;
   }
   posthog.opt_in_capturing({captureEventName:false});
+  posthog.startSessionRecording();
   if (!pageSent) {
     pageSent=true;
     capture('$pageview');
@@ -88,7 +118,7 @@ const banner = document.createElement('section');
 banner.className='analytics-choice';
 banner.setAttribute('aria-label',zh?'使用统计选择':'Usage analytics choice');
 const text = document.createElement('p');
-text.textContent=zh?'允许匿名使用统计吗？帮助改进官网与下载体验，数据发送至 PostHog 美国区，可随时更改。':'Allow anonymous usage analytics? Help improve this website and downloads. Data goes to PostHog US. You can change this anytime.';
+text.textContent=zh?'允许使用统计与会话回放吗？包含设备、来源、性能、点击和大致位置，输入内容会遮蔽。数据发送至 PostHog 美国区，可随时更改。':'Allow usage analytics and session replay? Includes device, source, performance, clicks and approximate location. Inputs are masked. Data goes to PostHog US. You can change this anytime.';
 const controls=document.createElement('div');
 const accept=document.createElement('button');accept.type='button';accept.textContent=zh?'允许统计':'Allow analytics';
 const reject=document.createElement('button');reject.type='button';reject.textContent=zh?'不允许':'No thanks';
@@ -96,7 +126,8 @@ function choose(value) {
   allowed=value;write(localStorage,choiceKey,value);banner.hidden=true;
   if(value)begin();
   else {
-    if(ready){posthog.opt_out_capturing();posthog.reset();}
+    pageSent=false;
+    if(ready){posthog.stopSessionRecording();posthog.opt_out_capturing();posthog.reset();}
     remove(localStorage,firstKey);remove(sessionStorage,sessionKey);
   }
 }

@@ -14,9 +14,9 @@ function fixture(choice = null) {
     return {getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v),removeItem:k=>values.delete(k)};
   };
   const localStorage = store();
-  if (choice !== null) localStorage.setItem('opx-analytics-choice-v1', JSON.stringify(choice));
+  if (choice !== null) localStorage.setItem('opx-analytics-choice-v2', JSON.stringify(choice));
   const document = {
-    documentElement:{lang:'en'}, referrer:'',
+    documentElement:{lang:'en'}, referrer:'https://referral.example/path?secret=private',
     createElement(tag) {
       const node = {tag, handlers:{},setAttribute(){},append(){},focus(){},addEventListener(k,v){this.handlers[k]=v;}};
       nodes.push(node); return node;
@@ -30,7 +30,7 @@ function fixture(choice = null) {
       const payload=options.before_send({event,properties:{token:'public-token',distinct_id:'anonymous',...properties,$current_url:'https://openplayx.com/?secret=private',$referrer:'https://private.example/path'}});
       if(payload)captures.push(payload);
     },
-    opt_in_capturing(){},opt_out_capturing(){optedOut=true;},reset(){},
+    startSessionRecording(){},stopSessionRecording(){},opt_in_capturing(){},opt_out_capturing(){optedOut=true;},reset(){},
   };
   const source=readFileSync(new URL('../src/analytics.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
   vm.runInNewContext(source,{document,posthog,localStorage,sessionStorage:store(),
@@ -48,13 +48,15 @@ test('no SDK initialization before consent or after saved rejection',()=>{
 test('consented payload keeps ingestion token and removes private URL/referrer',()=>{
   const f=fixture(); f.click('Allow analytics');
   assert.equal(f.initCount,1);
-  assert.equal(f.options.autocapture,false);
-  assert.equal(f.options.disable_session_recording,true);
+  assert.ok(f.options.autocapture);
+  assert.equal(f.options.disable_session_recording,false);
   assert.equal(f.captures.length,1);
   const payload=f.captures[0];
   assert.equal(payload.properties.token,'public-token');
+  assert.equal(payload.properties.$geoip_disable,false);
   assert.equal(payload.properties.$current_url,'https://openplayx.com/');
-  assert.equal(payload.properties.$referrer,undefined);
+  assert.equal(payload.properties.$referrer,'https://referral.example');
+  assert.equal(payload.properties.$referring_domain,'referral.example');
   assert.ok(!JSON.stringify(payload).includes('private'));
 });
 test('withdrawal blocks subsequent business events',()=>{
@@ -64,4 +66,37 @@ test('withdrawal blocks subsequent business events',()=>{
   f.handlers.click({target:{closest:()=>({href:'https://github.com/openplayx/openplayx',closest:()=>null,matches:()=>false})}});
   assert.equal(f.optedOut,true);
   assert.equal(f.captures.length,before);
+});
+
+test('automatic metrics retain context and payloads while stripping URL secrets',()=>{
+  const f=fixture(true);
+  for (const event of ['$pageleave','$autocapture','$$heatmap','$snapshot','$web_vitals','$exception']) {
+    const payload=f.options.before_send({event,properties:{
+      $browser:'Safari',$os:'iOS',$device_type:'Mobile',$viewport_width:390,
+      $web_vitals_LCP_value:1234,$prev_pageview_duration:12,
+      $heatmap_data:{'https://openplayx.com/?secret=private':[{x:10,y:20}]},
+      $snapshot_data:[{type:4,data:{href:'https://openplayx.com/?secret=private#private'}}],
+      $exception_list:[{type:'Error',value:'Failed at https://openplayx.com/?secret=private'}],
+      password:'private',
+    }});
+    assert.equal(payload.properties.origin,'web');
+    assert.equal(payload.properties.environment,'production');
+    assert.equal(payload.properties.$browser,'Safari');
+    assert.equal(payload.properties.$web_vitals_LCP_value,1234);
+    assert.equal(payload.properties.$prev_pageview_duration,12);
+    assert.ok(payload.properties.$snapshot_data);
+    assert.ok(payload.properties.$heatmap_data['https://openplayx.com/']);
+    assert.ok(!JSON.stringify(payload).includes('private'));
+  }
+});
+test('replay keeps masked inputs and blocks file inputs and network bodies',()=>{
+  const f=fixture(true), config=f.options.session_recording;
+  assert.equal(config.maskAllInputs,true);
+  assert.equal(config.recordBody,false);
+  assert.equal(config.recordHeaders,false);
+  assert.ok(config.blockSelector.includes('input[type=file]'));
+  assert.equal(config.maskAttributeFn('href','https://openplayx.com/?token=private'),'https://openplayx.com/');
+  assert.equal(f.options.before_send({event:'unexpected',properties:{}}),null);
+  f.click('No thanks');
+  assert.equal(f.options.before_send({event:'$snapshot',properties:{}}),null);
 });
