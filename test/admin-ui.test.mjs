@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import worker from '../src/worker.mjs';
+import worker from '../src/admin-worker.mjs';
 import {adminFixture} from './admin-fixture.mjs';
 import {adminUIIntegration} from './admin-ui-integration.mjs';
 test('Admin DOM through Web service binding: catalog recovery, price policy and idempotent confirmed creation',async()=>{

@@ -81,14 +81,24 @@ Website code and original illustrations: [MIT](LICENSE). See [NOTICE.md](NOTICE.
 
 - `/account/register`, `/account/setup`, `/account/verify`, `/account/recover`, `/account/reset`
 - `/account/connector`, `/account/permissions`
-- `/adminzzz/relay` and its assets
+- Admin is deployed separately at `https://admin.openplayx.com/`; its assets remain under `/adminzzz/assets/` on that domain.
 
 These pages use no marketing analytics or replay and send `no-store`, a restrictive CSP and `no-referrer`. The API origin no longer serves these pages.
 
-`src/worker.mjs` handles the pages and proxies only their allowlisted `/v1/auth`, own-user Relay and admin JSON endpoints through the `API` service binding to `openplayx-server`. It never proxies arbitrary destinations, LLM traffic or machine bootstrap. Browser cookies are not forwarded. Writes require the Web Origin; validated writes use the API Origin upstream. API passwords/tokens remain in the existing HTTPS login flow; they are never placed in URLs or analytics.
+`src/worker.mjs` handles user pages and proxies only their allowlisted `/v1/auth`, own-user Relay JSON endpoints through the `API` service binding to `openplayx-server`. It never proxies arbitrary destinations, LLM traffic or machine bootstrap. Browser cookies are not forwarded. Writes require the Web Origin; validated writes use the API Origin upstream. API passwords/tokens remain in the existing HTTPS login flow; they are never placed in URLs or analytics.
 
-Protect `/adminzzz*` and `/v1/adminzzz/*` on both Web domains with the existing admin Cloudflare Access application, preserving its owner policy and AUD. The API additionally verifies the forwarded Access JWT. Worker preview URLs do not expose admin without a valid identity. API bootstrap retains its existing separate policy; it is not exposed by the Web proxy.
+Protect all paths on `admin.openplayx.com` with the existing admin Cloudflare Access application, preserving its owner policy and AUD. Keep the API domain’s `/v1/adminzzz/*` protected. The public Web domains return 404 for admin pages and admin JSON proxy requests. The API additionally verifies the forwarded Access JWT. Worker preview URLs do not expose admin without a valid identity. API bootstrap retains its existing separate policy; it is not exposed by the Web proxy.
 
 `npm test` covers account/permissions/admin interactions and proxy boundaries. `npm run test:integration` runs the production entry in workerd with mocked API and asset bindings, including catalog failure/retry, price confirmation and idempotent submission. No test contacts Vultr, sends email or creates a real instance. Local development needs a reachable `openplayx-server` binding for business calls; never substitute production cloud credentials into tests.
 
 Page migration deployed on 2026-11-21: Web source `360b065acee63750d448e87caee6c1a3e4cbf835`, Cloudflare Worker version `d1787237-ddd3-4741-b964-67956811587a`. API Jenkins `deploy #17` published `v0.1.14` (source `d37aa96ebe98c6fc6daf94fb9ee269c178a8fbec`). Verified the new admin page reads the existing `syd1` node; old API page/assets URLs return JSON 404. Existing production marketing assets were unchanged. Connector `v0.1.3` uses the new page URLs and is installed on the existing VM.
+
+## Independent admin deployment
+
+`wrangler.admin.jsonc` deploys `src/admin-worker.mjs` as **openplayx-admin**, with its own custom domain **admin.openplayx.com**, no static marketing assets, no workers.dev or version previews. The dashboard is at `/`. The main Web entrypoint does not import the admin page module or forward admin JSON requests. Admin does not forward account/Relay user endpoints. Only the fixed API service binding and common proxy implementation are shared; API credentials remain in the API Worker.
+
+- `npm run deploy`: publish the main website and account pages only.
+- `npm run deploy:admin`: publish only the admin Worker; no marketing build/upload.
+- `npm run dev:admin`: develop the admin entry separately.
+
+Both deployment commands require unit/DOM and real-workerd integration checks. Tests cover separation of both entrypoints, Access identity checks, CSRF, provider failures and idempotent confirmed creation using mocks. Adding/editing user pages does not publish admin. Keep `ADMIN_PUBLIC_ORIGIN` on the API domain: it generates machine bootstrap URLs, not the admin UI address.

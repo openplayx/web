@@ -7,7 +7,7 @@ import {html,js} from '../src/pages/admin-ui.mjs';
 async function until(predicate,label){for(let i=0;i<500;i++){if(await predicate())return;await delay(10);}throw Error('Timed out: '+label);}
 
 export async function adminUIIntegration({dispatch,token,setFault,cloudCreates}) {
-  const dom=new JSDOM(html,{url:'https://openplayx.com/adminzzz/relay',runScripts:'outside-only'});
+  const dom=new JSDOM(html,{url:'https://admin.openplayx.com/adminzzz/relay',runScripts:'outside-only'});
   const w=dom.window;const $=id=>w.document.getElementById(id);const requests=[];
   let loseResponse=true;
   w.HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};
@@ -16,9 +16,9 @@ export async function adminUIIntegration({dispatch,token,setFault,cloudCreates})
   w.setInterval=()=>0;
   w.fetch=async(path,init={})=>{
     const headers=new Headers(init.headers);headers.set('Cf-Access-Jwt-Assertion',token);
-    if(init.method!=='GET')headers.set('Origin','https://openplayx.com');
+    if(init.method!=='GET')headers.set('Origin','https://admin.openplayx.com');
     requests.push({path,method:init.method,key:headers.get('Idempotency-Key'),body:init.body});
-    const response=await dispatch(new URL(path,'https://openplayx.com'),{...init,headers});
+    const response=await dispatch(new URL(path,'https://admin.openplayx.com'),{...init,headers});
     if(path==='/v1/adminzzz/relay/nodes'&&init.method==='POST'&&loseResponse&&response.ok){loseResponse=false;await response.arrayBuffer();throw Error('fixture lost response after acceptance');}
     return response;
   };
