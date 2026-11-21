@@ -1,8 +1,9 @@
+import {accountHubHTML,accountHubCSS} from './account-hub.mjs';
 import {html,css,js} from './admin-ui.mjs';
 import {accountHTML,accountCSS,accountJS} from './account-ui.mjs';
 import {connectorAccountHTML,connectorAccountJS} from './connector-account-ui.mjs';
 const headers={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','X-Frame-Options':'DENY','Content-Security-Policy':"default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"};
-const pages=new Map();
+const pages=new Map([['/account/',[accountHubHTML,'text/html']],['/account/assets/hub.css',[accountHubCSS,'text/css']]]);
 for(const path of ['/account/register','/account/setup','/account/verify','/account/recover','/account/reset'])pages.set(path,[accountHTML,'text/html']);
 for(const path of ['/account/connector','/account/permissions'])pages.set(path,[connectorAccountHTML,'text/html']);
 for(const path of ['/adminzzz','/adminzzz/relay','/adminzzz/relay/'])pages.set(path,[html,'text/html']);

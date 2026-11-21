@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {pageResponse} from '../src/pages/index.mjs';
 import { pages } from '../src/render.mjs';
 import { copy } from '../content/copy.mjs';
 import release from '../content/releases.json' with { type: 'json' };
@@ -30,6 +31,7 @@ for(const lang of ['en','zh'])for(const page of pages){
     if(/^https?:|^mailto:|^data:/.test(link))continue;
     const u=new URL(link,'https://openplayx.com'+route);
     if(u.pathname===route && u.hash)assert(ids.includes(decodeURIComponent(u.hash.slice(1))),`${route}: missing anchor ${link}`);
+    if(u.pathname.startsWith('/account/')){assert.equal(pageResponse(new Request(u)).status,200,`${route}: missing account page ${link}`);links++;continue;}
     let target=resolve(root,'.'+u.pathname);
     if(u.pathname.endsWith('/'))target=resolve(target,'index.html');
     await access(target);links++;
