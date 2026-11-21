@@ -31,5 +31,21 @@
       "binding": "API",
       "service": "openplayx-server"
     }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "ACCOUNT_SESSIONS",
+        "class_name": "AccountSession"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "account-sessions-v1",
+      "new_sqlite_classes": [
+        "AccountSession"
+      ]
+    }
   ]
 }

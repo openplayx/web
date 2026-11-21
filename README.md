@@ -75,13 +75,17 @@ See [SOURCES.md](SOURCES.md) for dependency sources, asset provenance and attrib
 
 Website code and original illustrations: [MIT](LICENSE). See [NOTICE.md](NOTICE.md), [asset notices](public/NOTICE.md), [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md). The app preserves separate third-party licenses, including GPL terms for builds linking sing-box.
 
-## User account pages
+## User account center
 
-`src/pages/` owns the user HTML, CSS and browser JavaScript: `/account/`, registration, password recovery, Connector binding and phone permissions. These pages use no marketing analytics or replay, with `no-store`, restrictive CSP and `no-referrer` headers.
+`/account/` is a signed-in workspace with **My services**, **Connector** and **Account settings**. Guests receive the separate `/account/login` page and return to their intended page after login. Registration, email verification, password setup and recovery have distinct routes and forms. No account page includes marketing analytics or replay.
 
-`src/worker.mjs` proxies only allowlisted account and own-user Relay JSON endpoints through the fixed `API` service binding to `openplayx-server`. Browser cookies are not forwarded. Writes require the Web Origin and use the API Origin upstream. API keys are not in this repository.
+Services are read-only synchronized results: configuration and add/edit/enable/delete belong to the edge Connector. Every active device signed into the same account automatically receives the account’s enabled services; there is no per-device service grant UI. Connector binding/unbinding and account profile/password/session management remain user-controlled, with confirmation and recent-password reauthentication for sensitive changes. Configuration state is distinguished from real network availability.
 
-`npm test` covers account interactions and proxy boundaries. `npm run test:integration` runs the production entry in workerd with mocked API and asset bindings. It validates that the public Web bundle contains no admin UI and that admin routes return 404. Tests do not send email or purchase servers.
+`src/account-session.mjs` provides the same-origin `/account/api/*` BFF and an independent **AccountSession** SQLite Durable Object. The browser holds only an opaque `__Host-opx-account` Secure/HttpOnly/SameSite=Lax cookie; Access/Refresh Tokens remain in private server-side storage. The object serializes refresh requests, expires after 30 days and revokes only the current Web login on logout. Each browser session has a separate random identity. Account passwords are sent only to the existing private auth API; request bodies, cookies and tokens are never logged or sent to analytics.
+
+The BFF allowlist permits reading account services/connectors/devices, confirming Connector pairing, removing Connector/device identities, editing display name and reading owned operation progress. It cannot mutate services, grant per-device services, forward arbitrary destinations or access admin/LLM/machine APIs. Writes require exact Origin and JSON. If-Match and pending operation responses are preserved. Public email auth forms use a separate narrow stateless proxy.
+
+`npm test` covers the DOM flows, request contracts, cookie/credential isolation, concurrent refresh and reauthentication. `npm run test:integration` runs the real Worker, persistent session object, mocked API and DOM together, including recovery after object eviction. Tests never send actual mail or buy cloud resources. `wrangler.jsonc` adds only the Web session namespace (`account-sessions-v1`); the API database and all machine identities are separate and unchanged by this binding.
 
 ## Independent private admin project
 

@@ -1,11 +1,9 @@
-import {accountHubHTML,accountHubCSS} from './account-hub.mjs';
-import {accountHTML,accountCSS,accountJS} from './account-ui.mjs';
-import {connectorAccountHTML,connectorAccountJS} from './connector-account-ui.mjs';
+import {accountAppHTML,accountAppCSS} from './account-app.mjs';
+import accountAppJS from './account-app-client.mjs';
 const headers={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','X-Frame-Options':'DENY','Content-Security-Policy':"default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"};
-const pages=new Map([['/account/',[accountHubHTML,'text/html']],['/account/assets/hub.css',[accountHubCSS,'text/css']]]);
-for(const path of ['/account/register','/account/setup','/account/verify','/account/recover','/account/reset'])pages.set(path,[accountHTML,'text/html']);
-for(const path of ['/account/connector','/account/permissions'])pages.set(path,[connectorAccountHTML,'text/html']);
-for(const [path,body,type] of [['/account/assets/app.css',accountCSS,'text/css'],['/account/assets/app.js',accountJS,'application/javascript'],['/account/assets/connector.js',connectorAccountJS,'application/javascript']])pages.set(path,[body,type]);
+const pages=new Map();
+for(const path of ['/account/','/account/services','/account/connectors','/account/connector','/account/settings','/account/login','/account/register','/account/recover','/account/setup','/account/reset','/account/verify'])pages.set(path,[accountAppHTML,'text/html']);
+for(const [path,body,type] of [['/account/assets/account.css',accountAppCSS,'text/css'],['/account/assets/account.js',accountAppJS,'application/javascript']])pages.set(path,[body,type]);
 export function pageResponse(request){
  const path=new URL(request.url).pathname;
  if(!path.startsWith('/account/'))return null;
