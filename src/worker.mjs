@@ -1,3 +1,4 @@
+import {docsResponse} from './docs.mjs';
 import {accountSessionAPI} from './account-session.mjs';
 export {AccountSession} from './account-session.mjs';
 import {pageResponse,connectorScriptPath} from './pages/index.mjs';
@@ -25,6 +26,7 @@ function health(request,env){
 }
 export default {async fetch(request,env){
  const path=new URL(request.url).pathname;
+ if(path==='/docs'||path.startsWith('/docs/'))return docsResponse(request,env);
  if(path==='/health')return health(request,env);
  if(path==='/account/api'||path.startsWith('/account/api/'))return accountSessionAPI(request,env);
  if(path.startsWith('/v1/'))return proxyAPI(request,env);

@@ -94,3 +94,30 @@ The BFF allowlist permits reading account services/connectors/devices, confirmin
 Administrator pages, their JSON proxy, deployment configuration and tests are maintained in the private repository **https://github.com/openplayx/admin**. Its separate **openplayx-admin** Worker serves **https://admin.openplayx.com/**, protected by Cloudflare Access. The API still independently validates admin identities. The main website does not serve admin pages or forward management requests.
 
 `npm run deploy` publishes only the main website and user pages. To update the admin, use its own private repository and deployment command. Old public Git history may still contain the previously published UI; removal from this branch does not make that history private. No credentials were migrated or exposed.
+
+## Public documentation
+
+The independent sibling `docs/` checkout builds Docusaurus at `/docs/` and
+`/docs/zh-Hans/`. Use Node 24.16.0 and install both checkouts with `npm ci`.
+`npm run build:site` builds both sites, verifies the docs digest manifest and
+assembles a clean `dist/docs/`. `npm run dev` / `preview` use this complete build.
+`npm run build` is the marketing-only build step for CI assembly, not a complete
+production artifact. `npm run deploy` now builds and tests the complete site.
+
+`npm run test:docs` exercises the real local Wrangler Static Assets router,
+including nested 404 status, CSP, asset requests and existing website routes.
+The Worker handles only `/docs` and `/docs/*` in addition to its existing paths.
+Executable Docusaurus bootstrap code is externalized; only the docs subtree
+allows inline styles. Marketing and account policies retain their existing CSP.
+
+Standalone docs have no analytics dependency. Assembly adds this site's PostHog
+bundle; document SPA navigations each emit one sanitized pageview, including
+back/forward navigation but excluding query/hash-only changes. Document analytics
+have no autocapture, replay, heatmaps or search text. Unknown document paths map
+to a fixed 404 analytics path. Keep `docsRoute()` in `src/analytics.js` aligned
+with newly published article routes (unknown paths are deliberately redacted).
+
+Jenkins `web/site-publish` and the legacy `web/deploy` share the same full-run
+production lock. The private build repository pins docs as a companion, packages
+one Worker plus all assets, blocks old web-only archives, verifies the public
+site and restores the previous complete Worker version if verification fails.

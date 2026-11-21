@@ -7,12 +7,14 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "check": "node scripts/check.mjs",
-    "dev": "npm run build && wrangler dev",
-    "preview": "npm run build && wrangler dev",
+    "dev": "npm run build:site && wrangler dev",
+    "preview": "npm run build:site && wrangler dev",
     "refresh:releases": "node scripts/update-releases.mjs",
-    "deploy": "npm test && npm run test:integration && npm run build && npm run check && wrangler deploy",
+    "deploy": "npm test && npm run test:integration && npm run build:site && npm run test:docs && wrangler deploy",
     "test": "node ui/kit.mjs --check && node --test test/*.test.mjs scripts/*.test.mjs",
-    "test:integration": "node scripts/test-worker-integration.mjs"
+    "test:integration": "node scripts/test-worker-integration.mjs",
+    "build:site": "node scripts/build-site.mjs",
+    "test:docs": "node scripts/test-docs-integration.mjs"
   },
   "devDependencies": {
     "esbuild": "0.28.2",

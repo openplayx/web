@@ -21,9 +21,16 @@ try { localStorage.removeItem('opx-analytics-choice-v2'); } catch {}
 let ready = false;
 let pageSent = false;
 let firstTouch, sessionTouch;
+const docsVisit = location.pathname.startsWith('/docs/');
 const path = location.pathname;
-const page = path.replace(/^\/zh(?=\/)/, '').split('/').filter(Boolean)[0] || 'home';
-const route = `/${zh ? 'zh/' : ''}${page === 'home' ? '' : page + '/'}`;
+const page = docsVisit ? 'docs' : path.replace(/^\/zh(?=\/)/, '').split('/').filter(Boolean)[0] || 'home';
+let route = `/${zh ? 'zh/' : ''}${page === 'home' ? '' : page + '/'}`;
+function docsRoute(pathname) {
+  const match=pathname.match(/^\/docs\/(zh-Hans\/)?(.*)$/);
+  const allowed=['','getting-started/first-video/','sources/smb/','library/home/','ai/models/','ai/mcp/','remote-access/connector/','help/faq/'];
+  return match ? '/docs/'+(match[1]||'')+(allowed.includes(match[2])?match[2]:'404/') : '/docs/';
+}
+if (docsVisit) route=docsRoute(path);
 const query = new URLSearchParams(location.search);
 const environment = ['localhost','127.0.0.1'].includes(location.hostname) || query.get('analytics_test') === '1' ? 'validation' : config.environment;
 const entry = {};
@@ -85,9 +92,9 @@ function begin() {
   firstTouch=first.touch;sessionTouch=session.touch;
   if (!ready) {
     posthog.init(config.projectToken, {
-      api_host:config.host,debug:environment==='validation',autocapture:{capture_copied_text:false},capture_pageview:false,capture_pageleave:true,
-      disable_session_recording:false,disable_surveys:true,capture_performance:{web_vitals:true,network_timing:true},
-      capture_heatmaps:true,capture_exceptions:true,person_profiles:'always',
+      api_host:config.host,debug:environment==='validation',autocapture:docsVisit?false:{capture_copied_text:false},capture_pageview:false,capture_pageleave:!docsVisit,
+      disable_session_recording:docsVisit,disable_surveys:true,capture_performance:docsVisit?false:{web_vitals:true,network_timing:true},
+      capture_heatmaps:!docsVisit,capture_exceptions:!docsVisit,person_profiles:'always',
       session_recording:{sampleRate:1,maskAllInputs:true,blockSelector:'input[type=file], .ph-no-capture',
         recordHeaders:false,recordBody:false,recordCrossOriginIframes:false,
         maskAttributeFn:(name,value)=>['href','src','action'].includes(name)?cleanUrl(value):value,
@@ -97,7 +104,7 @@ function begin() {
       advanced_disable_feature_flags_on_first_load:true,disable_external_dependency_loading:true,
       persistence:'localStorage',bootstrap:{},
       before_send(event) {
-        if (!events.has(event.event)) return null;
+        if (!events.has(event.event) || docsVisit && event.event!=='$pageview') return null;
         event.properties=Object.fromEntries(Object.entries(event.properties || {}).filter(([k])=>safeKeys.has(k)||/^\$web_vitals_(LCP|CLS|INP|FCP|TTFB)_(value|event)$/.test(k)));
         event.properties=scrub(event.properties);
         if(event.event==='$exception') event.properties.$exception_type=event.properties.$exception_list?.[0]?.type || 'Error';
@@ -106,6 +113,7 @@ function begin() {
         if(referrer){event.properties.$referrer=referrer.origin;event.properties.$referring_domain=referrer.hostname;}
         event.properties.$current_url = 'https://openplayx.com'+route;
         event.properties.$pathname = route;
+        if(docsVisit){event.properties.$title='OpenPlayX Docs';delete event.properties.$prev_pageview_pathname;}
         event.properties.$geoip_disable = false;
         return event;
       },
@@ -113,7 +121,7 @@ function begin() {
     ready=true;
   }
   posthog.opt_in_capturing({captureEventName:false});
-  posthog.startSessionRecording();
+  if (!docsVisit) posthog.startSessionRecording();
   if (!pageSent) {
     pageSent=true;
     capture('$pageview');
@@ -130,5 +138,9 @@ document.addEventListener('click',event=>{
   else if(link.matches('[data-language]'))capture('language_changed',{from_locale:zh?'zh':'en',to_locale:zh?'en':'zh'});
   else if(url.hostname==='github.com'&&url.pathname==='/openplayx/openplayx')capture('repository_clicked',{repository:'openplayx/openplayx',button_position:position});
   else if(url.pathname.includes('/contribute/')||url.hostname==='github.com'&&url.pathname.includes('/issues'))capture('contribute_clicked',{action:'contribute',button_position:position});
+});
+if (docsVisit) window.addEventListener('opx:docs-navigation',()=>{
+  const next=docsRoute(location.pathname);
+  if(next!==route){route=next;capture('$pageview');}
 });
 begin();

@@ -29,7 +29,9 @@
       "/account/*",
       "/adminzzz",
       "/adminzzz/*",
-      "/v1/*"
+      "/v1/*",
+      "/docs",
+      "/docs/*"
     ]
   },
   "main": "src/worker.mjs",

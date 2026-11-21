@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 
 // Exercise our analytics adapter without a browser or any network requests.
-function fixture(choice = null) {
+function fixture(choice = null, pathname = '/') {
   // `choice` simulates a value saved by the removed consent banner; it must no longer matter.
   const nodes = [];
   const handlers = {};
@@ -33,12 +33,14 @@ function fixture(choice = null) {
     },
     startSessionRecording(){},stopSessionRecording(){},opt_in_capturing(){},opt_out_capturing(){optedOut=true;},reset(){},
   };
+  const location={pathname,hostname:'openplayx.com',search:'?secret=private',href:'https://openplayx.com'+pathname+'?secret=private'};
+  const window={addEventListener:(key,handler)=>{handlers[key]=handler;}};
   const source=readFileSync(new URL('../src/analytics.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
   vm.runInNewContext(source,{document,posthog,localStorage,sessionStorage:store(),
     URL,URLSearchParams,Date,config:{projectToken:'public-token',host:'https://us.i.posthog.com',environment:'production'},
     campaigns:{sources:['github'],mediums:['referral'],campaigns:[],contents:[]},release:{assets:[]},
-    location:{pathname:'/',hostname:'openplayx.com',search:'?secret=private',href:'https://openplayx.com/?secret=private'}});
-  return {created:nodes,captures,handlers,get initCount(){return initCount;},get optedOut(){return optedOut;},get options(){return options;}};
+    location,window});
+  return {created:nodes,captures,handlers,location,get initCount(){return initCount;},get optedOut(){return optedOut;},get options(){return options;}};
 }
 
 test('starts on every visit without a prompt, ignoring an old saved rejection',()=>{
@@ -97,4 +99,24 @@ test('replay keeps masked inputs and blocks file inputs and network bodies',()=>
   assert.ok(config.blockSelector.includes('input[type=file]'));
   assert.equal(config.maskAttributeFn('href','https://openplayx.com/?token=private'),'https://openplayx.com/');
   assert.equal(f.options.before_send({event:'unexpected',properties:{}}),null);
+});
+
+test('docs SPA sends one pageview per article and excludes search queries and replay',()=>{
+  const f=fixture(null,'/docs/');
+  assert.equal(f.captures.length,1);
+  assert.equal(f.options.autocapture,false);
+  assert.equal(f.options.disable_session_recording,true);
+  f.handlers['opx:docs-navigation']();
+  assert.equal(f.captures.length,1,'initial hydration is not another view');
+  f.location.pathname='/docs/sources/smb/';
+  f.location.search='?q=private&token=private';
+  f.handlers['opx:docs-navigation']();
+  f.handlers['opx:docs-navigation']();
+  assert.equal(f.captures.length,2);
+  assert.equal(f.captures[1].properties.$current_url,'https://openplayx.com/docs/sources/smb/');
+  assert(!JSON.stringify(f.captures).includes('private'));
+  assert.equal(f.options.before_send({event:'$snapshot',properties:{}}),null);
+  f.location.pathname='/docs/search';
+  f.handlers['opx:docs-navigation']();
+  assert.equal(f.captures.at(-1).properties.$pathname,'/docs/404/');
 });

@@ -286,6 +286,10 @@
     [
       "Inside the app",
       "Local playback is separate from AI. Models and external services may receive information you choose to use with them. The app currently stores configuration and credentials in its local configuration database; it does not promise end-to-end encryption or automatic cloud sync."
+    ],
+    [
+      "Documentation analytics",
+      "Documentation uses the same PostHog project. Each document navigation records one page view. Search terms, query strings and fragments are excluded from document analytics. Documentation search runs locally in your browser."
     ]
   ],
   "notFoundTitle": "This frame is missing.",
@@ -298,5 +302,6 @@
   "appLabel": "Illustrative OpenPlayX interface",
   "navLabel": "Main navigation",
   "account": "Account",
-  "themeLabel": "Toggle theme"
+  "themeLabel": "Toggle theme",
+  "docs": "Docs"
 }
