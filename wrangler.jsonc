@@ -3,6 +3,7 @@
   "name": "openplayx-web",
   "compatibility_date": "2026-11-15",
   "workers_dev": true,
+  "preview_urls": false,
   "routes": [
     {
       "pattern": "openplayx.com",
@@ -19,6 +20,7 @@
     "not_found_handling": "404-page",
     "binding": "ASSETS",
     "run_worker_first": [
+      "/health",
       "/account/*",
       "/adminzzz",
       "/adminzzz/*",
@@ -47,5 +49,8 @@
         "AccountSession"
       ]
     }
-  ]
+  ],
+  "version_metadata": {
+    "binding": "VERSION_METADATA"
+  }
 }

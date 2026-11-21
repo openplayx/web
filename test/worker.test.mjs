@@ -22,3 +22,9 @@ test('public Web never serves admin or forwards admin, bootstrap, operator and L
 test('upstream redirects and non-JSON responses never become public HTML',async()=>{
  for(const upstream of [new Response('private HTML',{status:302,headers:{Location:'https://evil.test'}}),new Response('private HTML',{status:200})]){const response=await proxyAPI(req('/v1/auth/registration/request',{method:'POST',headers:{Origin:'https://openplayx.com'},body:'{}'}),{API:{fetch:async()=>upstream}});assert.equal(response.status,502);assert.ok(!(await response.text()).includes('private HTML'))}
 });
+test('health reports the serving Worker version, deployment tag and commit without touching upstreams',async()=>{
+ const {env,calls}=fixture();const response=await worker.fetch(req('/health'),{...env,VERSION_METADATA:{id:'version-a',tag:'v1.0.1'},DEPLOY_COMMIT:'a'.repeat(40)});
+ assert.equal(response.status,200);assert.equal(response.headers.get('X-Worker-Version'),'version-a');assert.equal(response.headers.get('Cache-Control'),'no-store');
+ assert.deepEqual(await response.json(),{status:'ok',service:'web',tag:'v1.0.1',commit:'a'.repeat(40)});
+ assert.equal((await worker.fetch(req('/health',{method:'POST'}),env)).status,405);assert.deepEqual(await (await worker.fetch(req('/health'),env)).json(),{status:'ok',service:'web'});assert.equal(calls.length,0);
+});
