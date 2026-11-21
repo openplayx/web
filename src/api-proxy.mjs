@@ -1,12 +1,11 @@
 const API_ORIGIN='https://api.openplayx.com';
 const json=(code,status)=>Response.json({error:{code}},{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
-function allowedRoute(path,scope){
- if(scope==='admin')return /^\/v1\/adminzzz(?:\/|$)/.test(path)&&!/^\/v1\/adminzzz\/bootstrap(?:\/|$)/.test(path);
+function allowedRoute(path){
  if(/^\/v1\/auth\/(?:registration\/(?:request|complete)|verify-email|login|logout|password-reset\/(?:request|confirm))$/.test(path))return true;
  return /^\/v1\/relay\/me\/(?:devices|services|connector-bindings\/approve|devices\/[^/]+\/grants)$/.test(path);
 }
-export async function proxyAPI(request,env,path=new URL(request.url).pathname,scope='account'){
- if(!allowedRoute(path,scope))return json('not_found',404);
+export async function proxyAPI(request,env,path=new URL(request.url).pathname){
+ if(!allowedRoute(path))return json('not_found',404);
  if(!['GET','POST','PUT','PATCH','DELETE','HEAD'].includes(request.method))return json('method_not_allowed',405);
  const browser=new URL(request.url),write=!['GET','HEAD'].includes(request.method);
  // Browser cookies stay on Web. Only API credentials and edge-verified Access

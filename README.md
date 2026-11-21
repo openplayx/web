@@ -75,30 +75,16 @@ See [SOURCES.md](SOURCES.md) for dependency sources, asset provenance and attrib
 
 Website code and original illustrations: [MIT](LICENSE). See [NOTICE.md](NOTICE.md), [asset notices](public/NOTICE.md), [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md). The app preserves separate third-party licenses, including GPL terms for builds linking sing-box.
 
-## Account and admin pages
+## User account pages
 
-`src/pages/` owns the HTML, CSS and browser JavaScript moved from the API repository:
+`src/pages/` owns the user HTML, CSS and browser JavaScript: `/account/`, registration, password recovery, Connector binding and phone permissions. These pages use no marketing analytics or replay, with `no-store`, restrictive CSP and `no-referrer` headers.
 
-- `/account/register`, `/account/setup`, `/account/verify`, `/account/recover`, `/account/reset`
-- `/account/connector`, `/account/permissions`
-- Admin is deployed separately at `https://admin.openplayx.com/`; its assets remain under `/adminzzz/assets/` on that domain.
+`src/worker.mjs` proxies only allowlisted account and own-user Relay JSON endpoints through the fixed `API` service binding to `openplayx-server`. Browser cookies are not forwarded. Writes require the Web Origin and use the API Origin upstream. API keys are not in this repository.
 
-These pages use no marketing analytics or replay and send `no-store`, a restrictive CSP and `no-referrer`. The API origin no longer serves these pages.
+`npm test` covers account interactions and proxy boundaries. `npm run test:integration` runs the production entry in workerd with mocked API and asset bindings. It validates that the public Web bundle contains no admin UI and that admin routes return 404. Tests do not send email or purchase servers.
 
-`src/worker.mjs` handles user pages and proxies only their allowlisted `/v1/auth`, own-user Relay JSON endpoints through the `API` service binding to `openplayx-server`. It never proxies arbitrary destinations, LLM traffic or machine bootstrap. Browser cookies are not forwarded. Writes require the Web Origin; validated writes use the API Origin upstream. API passwords/tokens remain in the existing HTTPS login flow; they are never placed in URLs or analytics.
+## Independent private admin project
 
-Protect all paths on `admin.openplayx.com` with the existing admin Cloudflare Access application, preserving its owner policy and AUD. Keep the API domain’s `/v1/adminzzz/*` protected. The public Web domains return 404 for admin pages and admin JSON proxy requests. The API additionally verifies the forwarded Access JWT. Worker preview URLs do not expose admin without a valid identity. API bootstrap retains its existing separate policy; it is not exposed by the Web proxy.
+Administrator pages, their JSON proxy, deployment configuration and tests are maintained in the private repository **https://github.com/openplayx/admin**. Its separate **openplayx-admin** Worker serves **https://admin.openplayx.com/**, protected by Cloudflare Access. The API still independently validates admin identities. The main website does not serve admin pages or forward management requests.
 
-`npm test` covers account/permissions/admin interactions and proxy boundaries. `npm run test:integration` runs the production entry in workerd with mocked API and asset bindings, including catalog failure/retry, price confirmation and idempotent submission. No test contacts Vultr, sends email or creates a real instance. Local development needs a reachable `openplayx-server` binding for business calls; never substitute production cloud credentials into tests.
-
-Page migration deployed on 2026-11-21: Web source `360b065acee63750d448e87caee6c1a3e4cbf835`, Cloudflare Worker version `d1787237-ddd3-4741-b964-67956811587a`. API Jenkins `deploy #17` published `v0.1.14` (source `d37aa96ebe98c6fc6daf94fb9ee269c178a8fbec`). Verified the new admin page reads the existing `syd1` node; old API page/assets URLs return JSON 404. Existing production marketing assets were unchanged. Connector `v0.1.3` uses the new page URLs and is installed on the existing VM.
-
-## Independent admin deployment
-
-`wrangler.admin.jsonc` deploys `src/admin-worker.mjs` as **openplayx-admin**, with its own custom domain **admin.openplayx.com**, no static marketing assets, no workers.dev or version previews. The dashboard is at `/`. The main Web entrypoint does not import the admin page module or forward admin JSON requests. Admin does not forward account/Relay user endpoints. Only the fixed API service binding and common proxy implementation are shared; API credentials remain in the API Worker.
-
-- `npm run deploy`: publish the main website and account pages only.
-- `npm run deploy:admin`: publish only the admin Worker; no marketing build/upload.
-- `npm run dev:admin`: develop the admin entry separately.
-
-Both deployment commands require unit/DOM and real-workerd integration checks. Tests cover separation of both entrypoints, Access identity checks, CSRF, provider failures and idempotent confirmed creation using mocks. Adding/editing user pages does not publish admin. Keep `ADMIN_PUBLIC_ORIGIN` on the API domain: it generates machine bootstrap URLs, not the admin UI address.
+`npm run deploy` publishes only the main website and user pages. To update the admin, use its own private repository and deployment command. Old public Git history may still contain the previously published UI; removal from this branch does not make that history private. No credentials were migrated or exposed.
