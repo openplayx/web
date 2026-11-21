@@ -7,14 +7,18 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "check": "node scripts/check.mjs",
-    "dev": "node scripts/serve.mjs",
-    "preview": "node scripts/serve.mjs",
+    "dev": "npm run build && wrangler dev",
+    "preview": "npm run build && wrangler dev",
     "refresh:releases": "node scripts/update-releases.mjs",
-    "deploy": "npm run build && npm run check && wrangler deploy"
+    "deploy": "npm test && npm run test:integration && npm run build && npm run check && wrangler deploy",
+    "test": "node --test test/*.test.mjs scripts/*.test.mjs",
+    "test:integration": "node scripts/test-worker-integration.mjs"
   },
   "devDependencies": {
     "esbuild": "0.28.2",
-    "wrangler": "4.162.0"
+    "wrangler": "4.162.0",
+    "jsdom": "26.1.0",
+    "miniflare": "5.20261113.0-beta"
   },
   "engines": {
     "node": ">=22"

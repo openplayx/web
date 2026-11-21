@@ -24,7 +24,9 @@ Requires Node.js 22+.
 npm install
 npm run build
 npm run check
-npm run dev                 # http://127.0.0.1:4173
+npm test
+npm run test:integration    # real workerd; mocked API binding, no cloud purchases
+npm run dev                 # Wrangler local Worker and static assets
 ```
 
 No framework or runtime package is needed by visitors. `content/copy.mjs` contains both languages; `src/render.mjs` renders pages; `public/assets/` contains local styles, scripts and original artwork. `dist/` is generated and ignored.
@@ -59,7 +61,7 @@ Do not commit OAuth credentials, API tokens or `.dev.vars`. No account ID, upstr
 - Product claims follow implemented capabilities; cross-device sync and unvalidated platforms are not presented as finished.
 - App illustration and original sample artwork are visibly labelled, and do not expose personal media data.
 - Original main app code is MIT; ecosystem services retain their own licenses. Some app build dependencies remain private. This site does not relicense them.
-- No mailing-list form, ads or account system is included. PostHog US analytics starts only after consent; visitors can reject or withdraw through the footer. No replay or automatic click collection. See the published privacy page.
+- Account and admin pages use the private API through a fixed service binding. PostHog US analytics starts only after consent; visitors can reject or withdraw through the footer. No replay or automatic click collection. See the published privacy page.
 
 ## Usage analytics
 
@@ -72,3 +74,19 @@ UTM values are allowlisted in `content/campaigns.json`. Use `?analytics_test=1` 
 See [SOURCES.md](SOURCES.md) for dependency sources, asset provenance and attribution maintenance.
 
 Website code and original illustrations: [MIT](LICENSE). See [NOTICE.md](NOTICE.md), [asset notices](public/NOTICE.md), [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md). The app preserves separate third-party licenses, including GPL terms for builds linking sing-box.
+
+## Account and admin pages
+
+`src/pages/` owns the HTML, CSS and browser JavaScript moved from the API repository:
+
+- `/account/register`, `/account/setup`, `/account/verify`, `/account/recover`, `/account/reset`
+- `/account/connector`, `/account/permissions`
+- `/adminzzz/relay` and its assets
+
+These pages use no marketing analytics or replay and send `no-store`, a restrictive CSP and `no-referrer`. The API origin no longer serves these pages.
+
+`src/worker.mjs` handles the pages and proxies only their allowlisted `/v1/auth`, own-user Relay and admin JSON endpoints through the `API` service binding to `openplayx-server`. It never proxies arbitrary destinations, LLM traffic or machine bootstrap. Browser cookies are not forwarded. Writes require the Web Origin; validated writes use the API Origin upstream. API passwords/tokens remain in the existing HTTPS login flow; they are never placed in URLs or analytics.
+
+Protect `/adminzzz*` and `/v1/adminzzz/*` on both Web domains with the existing admin Cloudflare Access application, preserving its owner policy and AUD. The API additionally verifies the forwarded Access JWT. Worker preview URLs do not expose admin without a valid identity. API bootstrap retains its existing separate policy; it is not exposed by the Web proxy.
+
+`npm test` covers account/permissions/admin interactions and proxy boundaries. `npm run test:integration` runs the production entry in workerd with mocked API and asset bindings, including catalog failure/retry, price confirmation and idempotent submission. No test contacts Vultr, sends email or creates a real instance. Local development needs a reachable `openplayx-server` binding for business calls; never substitute production cloud credentials into tests.
