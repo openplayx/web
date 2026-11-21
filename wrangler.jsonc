@@ -31,7 +31,7 @@
   "services": [
     {
       "binding": "API",
-      "service": "openplayx-server"
+      "service": "openplayx-api"
     }
   ],
   "durable_objects": {
