@@ -3,14 +3,13 @@ import config from '../content/analytics.json';
 import campaigns from '../content/campaigns.json';
 import release from '../content/releases.json';
 
-const choiceKey = 'opx-analytics-choice-v2';
 const firstKey = 'opx-analytics-first-v1';
 const sessionKey = 'opx-analytics-session-v1';
 const zh = document.documentElement.lang.startsWith('zh');
 const read = (store, key) => { try { return JSON.parse(store.getItem(key)); } catch { return null; } };
 const write = (store, key, value) => { try { store.setItem(key, JSON.stringify(value)); } catch {} };
-const remove = (store, key) => { try { store.removeItem(key); } catch {} };
-let allowed = read(localStorage, choiceKey) === true;
+// Analytics runs on every visit; there is no consent prompt. Drop the choice saved by the old banner.
+try { localStorage.removeItem('opx-analytics-choice-v2'); } catch {}
 let ready = false;
 let pageSent = false;
 let firstTouch, sessionTouch;
@@ -58,7 +57,7 @@ function cleanUrl(value) {
   try { const url=new URL(value); if (!['http:','https:'].includes(url.protocol)) return value; return url.origin+url.pathname; } catch { return value; }
 }
 function capture(event, properties = {}) {
-  if (!allowed || !ready) return;
+  if (!ready) return;
   try {
     posthog.capture(event, {origin:'web',environment,schema_version:1,
       locale:zh?'zh':'en',page_type:page,site_version:'2026-11-21',
@@ -67,7 +66,6 @@ function capture(event, properties = {}) {
   } catch { /* Download/navigation never waits for analytics. */ }
 }
 function begin() {
-  if (!allowed) return;
   const now = Date.now();
   let first = read(localStorage, firstKey);
   let session = read(sessionStorage, sessionKey);
@@ -91,7 +89,7 @@ function begin() {
       advanced_disable_feature_flags_on_first_load:true,disable_external_dependency_loading:true,
       persistence:'localStorage',bootstrap:{},
       before_send(event) {
-        if (!allowed || !events.has(event.event)) return null;
+        if (!events.has(event.event)) return null;
         event.properties=Object.fromEntries(Object.entries(event.properties || {}).filter(([k])=>safeKeys.has(k)||/^\$web_vitals_(LCP|CLS|INP|FCP|TTFB)_(value|event)$/.test(k)));
         event.properties=scrub(event.properties);
         if(event.event==='$exception') event.properties.$exception_type=event.properties.$exception_list?.[0]?.type || 'Error';
@@ -114,30 +112,6 @@ function begin() {
     if (page==='download') capture('download_page_viewed');
   }
 }
-const banner = document.createElement('section');
-banner.className='analytics-choice';
-banner.setAttribute('aria-label',zh?'使用统计选择':'Usage analytics choice');
-const text = document.createElement('p');
-text.textContent=zh?'允许使用统计与会话回放吗？包含设备、来源、性能、点击和大致位置，输入内容会遮蔽。数据发送至 PostHog 美国区，可随时更改。':'Allow usage analytics and session replay? Includes device, source, performance, clicks and approximate location. Inputs are masked. Data goes to PostHog US. You can change this anytime.';
-const controls=document.createElement('div');
-const accept=document.createElement('button');accept.type='button';accept.textContent=zh?'允许统计':'Allow analytics';
-const reject=document.createElement('button');reject.type='button';reject.textContent=zh?'不允许':'No thanks';
-function choose(value) {
-  allowed=value;write(localStorage,choiceKey,value);banner.hidden=true;
-  if(value)begin();
-  else {
-    pageSent=false;
-    if(ready){posthog.stopSessionRecording();posthog.opt_out_capturing();posthog.reset();}
-    remove(localStorage,firstKey);remove(sessionStorage,sessionKey);
-  }
-}
-accept.addEventListener('click',()=>choose(true));reject.addEventListener('click',()=>choose(false));
-controls.append(accept,reject);banner.append(text,controls);document.body.append(banner);
-banner.hidden=read(localStorage,choiceKey)!==null;
-const settings=document.createElement('button');settings.type='button';settings.className='analytics-settings';
-settings.textContent=zh?'统计偏好':'Analytics preferences';
-settings.addEventListener('click',()=>{banner.hidden=false;accept.focus();});
-document.querySelector('.footer-bottom')?.append(settings);
 document.addEventListener('click',event=>{
   const link=event.target.closest?.('a[href]');if(!link)return;
   const url=new URL(link.href,location.href);
@@ -149,4 +123,4 @@ document.addEventListener('click',event=>{
   else if(url.hostname==='github.com'&&url.pathname==='/openplayx/openplayx')capture('repository_clicked',{repository:'openplayx/openplayx',button_position:position});
   else if(url.pathname.includes('/contribute/')||url.hostname==='github.com'&&url.pathname.includes('/issues'))capture('contribute_clicked',{action:'contribute',button_position:position});
 });
-if(allowed)begin();
+begin();

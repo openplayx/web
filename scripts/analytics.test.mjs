@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 
-// Exercise our consent adapter without a browser or any network requests.
+// Exercise our analytics adapter without a browser or any network requests.
 function fixture(choice = null) {
+  // `choice` simulates a value saved by the removed consent banner; it must no longer matter.
   const nodes = [];
   const handlers = {};
   const captures = [];
@@ -37,20 +38,22 @@ function fixture(choice = null) {
     URL,URLSearchParams,Date,config:{projectToken:'public-token',host:'https://us.i.posthog.com',environment:'production'},
     campaigns:{sources:['github'],mediums:['referral'],campaigns:[],contents:[]},release:{assets:[]},
     location:{pathname:'/',hostname:'openplayx.com',search:'?secret=private',href:'https://openplayx.com/?secret=private'}});
-  const click = label => nodes.find(x=>x.textContent===label).handlers.click();
-  return {click,captures,handlers,get initCount(){return initCount;},get optedOut(){return optedOut;},get options(){return options;}};
+  return {created:nodes,captures,handlers,get initCount(){return initCount;},get optedOut(){return optedOut;},get options(){return options;}};
 }
 
-test('no SDK initialization before consent or after saved rejection',()=>{
-  assert.equal(fixture().initCount,0);
-  assert.equal(fixture(false).initCount,0);
+test('starts on every visit without a prompt, ignoring an old saved rejection',()=>{
+  for (const choice of [null,false,true]) {
+    const f=fixture(choice);
+    assert.equal(f.initCount,1);
+    assert.equal(f.captures.length,1);
+    assert.equal(f.captures[0].event,'$pageview');
+    assert.equal(f.created.length,0);
+  }
 });
-test('consented payload keeps ingestion token and removes private URL/referrer',()=>{
-  const f=fixture(); f.click('Allow analytics');
-  assert.equal(f.initCount,1);
+test('payload keeps ingestion token and removes private URL/referrer',()=>{
+  const f=fixture();
   assert.ok(f.options.autocapture);
   assert.equal(f.options.disable_session_recording,false);
-  assert.equal(f.captures.length,1);
   const payload=f.captures[0];
   assert.equal(payload.properties.token,'public-token');
   assert.equal(payload.properties.$geoip_disable,false);
@@ -59,13 +62,10 @@ test('consented payload keeps ingestion token and removes private URL/referrer',
   assert.equal(payload.properties.$referring_domain,'referral.example');
   assert.ok(!JSON.stringify(payload).includes('private'));
 });
-test('withdrawal blocks subsequent business events',()=>{
-  const f=fixture(true);
-  f.click('No thanks');
-  const before=f.captures.length;
+test('business click events are captured',()=>{
+  const f=fixture();
   f.handlers.click({target:{closest:()=>({href:'https://github.com/openplayx/openplayx',closest:()=>null,matches:()=>false})}});
-  assert.equal(f.optedOut,true);
-  assert.equal(f.captures.length,before);
+  assert.equal(f.captures.at(-1).event,'repository_clicked');
 });
 
 test('automatic metrics retain context and payloads while stripping URL secrets',()=>{
@@ -97,6 +97,4 @@ test('replay keeps masked inputs and blocks file inputs and network bodies',()=>
   assert.ok(config.blockSelector.includes('input[type=file]'));
   assert.equal(config.maskAttributeFn('href','https://openplayx.com/?token=private'),'https://openplayx.com/');
   assert.equal(f.options.before_send({event:'unexpected',properties:{}}),null);
-  f.click('No thanks');
-  assert.equal(f.options.before_send({event:'$snapshot',properties:{}}),null);
 });

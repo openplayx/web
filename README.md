@@ -61,11 +61,11 @@ Do not commit OAuth credentials, API tokens or `.dev.vars`. No account ID, upstr
 - Product claims follow implemented capabilities; cross-device sync and unvalidated platforms are not presented as finished.
 - App illustration and original sample artwork are visibly labelled, and do not expose personal media data.
 - Original main app code is MIT; ecosystem services retain their own licenses. Some app build dependencies remain private. This site does not relicense them.
-- Account and admin pages use the private API through a fixed service binding. PostHog US analytics starts only after consent; visitors can reject or withdraw through the footer. No replay or automatic click collection. See the published privacy page.
+- Account and admin pages use the private API through a fixed service binding. PostHog US analytics (including autocapture, heatmaps and masked session replay) runs on every marketing page by default, with no consent prompt; account pages carry no analytics. See the published privacy page.
 
 ## Usage analytics
 
-`content/analytics.json` contains only the public Project Token and US ingestion host. Never add a Personal API Key. `src/analytics.js` is bundled locally; CSP permits only the US ingestion endpoint beyond same-origin resources. `node --test scripts/analytics.test.mjs` checks consent, withdrawal and URL sanitization.
+`content/analytics.json` contains only the public Project Token and US ingestion host. Never add a Personal API Key. `src/analytics.js` is bundled locally; CSP permits only the US ingestion endpoint beyond same-origin resources. `node --test scripts/analytics.test.mjs` checks startup without a prompt, event filtering and URL sanitization.
 
 UTM values are allowlisted in `content/campaigns.json`. Use `?analytics_test=1` for validation events excluded from production dashboards; localhost also uses validation. Normal visits use production. Website clicks are not completed downloads or installs. GitHub counters and backend operations live in the sibling repository `build/docs/posthog.md`.
 
