@@ -6,4 +6,43 @@
 @media(max-width:360px){.header-download .icon{display:none}.header-actions{gap:11px}.hero h1{font-size:66px}.hero-actions{gap:0}.hero-actions .button{font-size:10px;padding:13px}.hero-actions .button-secondary{padding-inline:7px}.hero-copy>.eyebrow{font-size:7px}.app-sidebar{display:none}.app-content{padding:17px}.preview-tabs{gap:22px}.preview-caption>span:last-child{max-width:110px;text-align:right}.feature-library{grid-template-columns:1.2fr .7fr}.feature-card{padding:23px}.feature-card h3{font-size:22px}.mini-collection{opacity:.5}.feature-library p{font-size:11px}.services-full{grid-template-columns:1fr}.footer-links{gap:20px}.source-chips>span{padding:13px;font-size:11px}.source-chips{gap:8px}html[lang=zh-CN] .hero h1{font-size:clamp(39px,13vw,47px)}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}.app-window{transform:none}}
 
-.analytics-choice{position:fixed;z-index:100;bottom:18px;left:18px;right:18px;max-width:660px;margin-inline:auto;padding:20px;background:#20201e;border:1px solid #ffffff35;border-radius:12px;box-shadow:0 10px 45px #0008}.analytics-choice p{font-size:13px;color:#d5d5cc}.analytics-choice>div{display:flex;gap:12px;margin-top:12px}.analytics-choice button{border:1px solid #ffffff25;border-radius:6px;background:#292925;padding:9px 13px;font-size:12px}.analytics-choice button:first-child{background:var(--accent);color:#111}.analytics-settings{border:0;background:none;color:inherit;padding:0;font-size:inherit;text-decoration:underline}
+
+.theme-toggle{display:flex;align-items:center;border:0;background:none;padding:5px;color:#c8c8c1}.theme-toggle:hover{color:var(--text)}.theme-toggle .opx-icon{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* Light theme. /assets/opx-theme.js (the shared UI kit script) puts .dark on <html> for dark mode;
+   the default follows the OS and the header toggle cycles system → light → dark.
+   The app-window preview stays dark in both themes, like a screenshot of the app. */
+html:not(.dark){color-scheme:light;--bg:#fbfaf7;--panel:#ffffff;--panel-2:#f3f2ed;--line:#1a1a1717;--text:#1a1a17;--muted:#5d5d55;--soft:#808076;--accent:#e14d1d;--accent-dark:#fbebe3}
+html:not(.dark) .app-window{color-scheme:dark;--bg:#111110;--panel:#191918;--panel-2:#20201e;--line:#ffffff16;--text:#f2f0eb;--muted:#a3a39a;--soft:#77786f;--accent:#ff5b2b;--accent-dark:#201a16;color:var(--text)}
+html:not(.dark) ::selection{background:#ff5b2b40;color:inherit}
+html:not(.dark) .button-primary{color:#fff}html:not(.dark) .button-primary:hover{background:#f05a28}
+html:not(.dark) .button-secondary{background:#ffffff;color:#2c2c28}html:not(.dark) .button-secondary:hover{background:#f3f2ed;border-color:#1a1a1740}
+html:not(.dark) .site-header{border-bottom-color:#1a1a1712;background:#fbfaf7eb}
+html:not(.dark) .header-inner nav a{color:#55554e}html:not(.dark) .header-inner nav a:hover,html:not(.dark) .header-inner nav a[aria-current],html:not(.dark) .language-link:hover{color:#111110}
+html:not(.dark) .github-link,html:not(.dark) .theme-toggle{color:#4a4a44}html:not(.dark) .github-link:hover,html:not(.dark) .theme-toggle:hover{color:#111110}
+html:not(.dark) .header-download{background:#1a1a17;color:#fbfaf7}html:not(.dark) .header-download:hover{background:#000}
+html:not(.dark) .release-line{color:#6f7066}html:not(.dark) .release-line>span{border-color:#1a1a1726;color:#4a4b42}
+html:not(.dark) .preview-caption{color:#7a7d72}html:not(.dark) .preview-caption>span:first-child{color:#55584c}
+html:not(.dark) .proof-strip{background:#f3f2ed}html:not(.dark) .proof-strip span{color:#5d5d52}html:not(.dark) .proof-strip .icon{color:#6e7262}
+html:not(.dark) .feature-index{color:#7c7a6a}
+html:not(.dark) .mini-collection>img{border-color:#1a1a1720;box-shadow:0 10px 30px #1a1a1722}
+html:not(.dark) .collection-label{color:#4d4836;border-color:#1a1a1720;background:#ffffffe8}
+html:not(.dark) .play-controls{color:#62665a}html:not(.dark) .big-play{background:#efeee6;border-color:#1a1a171a;color:#4b503f}html:not(.dark) .big-play .icon{fill:#4b503f}
+html:not(.dark) .waveform i{background:#8f9a6c}html:not(.dark) .feature-symbol{color:#6b7356}
+html:not(.dark) .source-section,html:not(.dark) .ecosystem-section,html:not(.dark) .future-platforms{background:#f3f2ed}
+html:not(.dark) .source-chips>span{border-color:#1a1a1714;background:#fff;color:#4a4b40}html:not(.dark) .source-chips>span:hover{border-color:#1a1a1740}html:not(.dark) .source-chips .icon{color:#69725a}
+html:not(.dark) .step>span{color:#b4552f}
+html:not(.dark) .service-card{background:#fff}html:not(.dark) .service-card:hover{border-color:#1a1a1740}
+html:not(.dark) .service-icon{border-color:#1a1a1714;background:#f3f2ed;color:#565c45}
+html:not(.dark) .service-license{color:#6e705f}html:not(.dark) .service-card .service-name{color:#62684f}html:not(.dark) .service-link{color:#4f5045}
+html:not(.dark) .community-actions>a{border-top-color:#1a1a1721}html:not(.dark) .community-actions>a>.icon:first-child{color:#64704f}
+html:not(.dark) .faq-list summary{color:#2c2c27}html:not(.dark) .faq-list summary>span{color:#6c7062}
+html:not(.dark) .closing-section{background:#f1efe8}
+html:not(.dark) .footer-links h3{color:#3a3a33}html:not(.dark) .footer-links a{color:#66695c}html:not(.dark) .footer-bottom{color:#727668}
+html:not(.dark) .release-meta{color:#55584b}html:not(.dark) .release-meta strong{color:#1f201a}
+html:not(.dark) .platform-icon{background:#f3f2ed;border-color:#1a1a1715;color:#4b503c}html:not(.dark) .platform-status{color:#5f644d}html:not(.dark) .other-downloads summary{color:#55584b}
+html:not(.dark) .connection-steps article{border-top-color:#1a1a1722}
+html:not(.dark) .notice{background:#f7f1ea;color:#55554b}
+html:not(.dark) .contribute-card>.icon{color:#64704f}
+
+@media(max-width:640px){html:not(.dark) .header-inner nav{background:#fbfaf7}}
+.header-download{white-space:nowrap}@media(max-width:640px){.theme-toggle{padding:3px}}

@@ -7,6 +7,8 @@ const dist = new URL('dist/', root);
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 await cp(new URL('public/', root), dist, { recursive: true });
+// Theme preference script shared with the account center (ui/opx-theme.js): follows the OS by default.
+await cp(new URL('ui/opx-theme.js', root), new URL('assets/opx-theme.js', dist));
 await build({entryPoints:[new URL('src/analytics.js',root).pathname],bundle:true,minify:true,
   format:'iife',platform:'browser',target:'es2020',outfile:new URL('assets/analytics.js',dist).pathname});
 for (const lang of ['en', 'zh']) {

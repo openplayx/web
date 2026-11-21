@@ -9,8 +9,10 @@ its own stylesheet and only reuses the colors.
   step; Basecoat's own JavaScript is not used.
 - **Theme**: `opx-theme.css` maps the Flutter app's palette (Zinc + teal primary, semantic
   status colors) onto shadcn token names and adds a few `opx-*` layout helpers.
-- **Behaviour**: `opx-theme.js` follows the OS light/dark setting (overridable with
-  `?theme=` or `localStorage["opx-theme"]`) and drives `.sidebar` on narrow screens.
+- **Behaviour**: `opx-theme.js` follows the OS light/dark setting by default (overridable with
+  `?theme=` or `localStorage["opx-theme"]`), turns any `<button data-theme-toggle>` into a
+  system → light → dark switch (icon and label filled in; add `data-theme-toggle-text` to show
+  the label too) and drives `.sidebar` on narrow screens.
 - **Logo**: `opx-logo.svg`, the orange mark. Orange is used for the logo only.
 
 Load order in `<head>`:
