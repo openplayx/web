@@ -46,3 +46,7 @@ html:not(.dark) .contribute-card>.icon{color:#64704f}
 
 @media(max-width:640px){html:not(.dark) .header-inner nav{background:#fbfaf7}}
 .header-download{white-space:nowrap}@media(max-width:640px){.theme-toggle{padding:3px}}
+
+.home-downloads{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:18px}.home-downloads a{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}.home-downloads a:hover{color:var(--accent)}.home-downloads .icon{width:16px;height:16px}.download-card{scroll-margin-top:110px}.download-card .platform-status{overflow-wrap:anywhere}
+
+@media(max-width:850px){.home-downloads{justify-content:center}}

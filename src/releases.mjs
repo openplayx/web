@@ -1,3 +1,4 @@
+import {appAsset, sortAppAssets} from './app-assets.mjs';
 import appSnapshot from '../content/releases.json' with { type: 'json' };
 import connectorSnapshot from '../content/connector-release.json' with { type: 'json' };
 // Download manifests. Jenkins writes the published release to KV (binding RELEASES,
@@ -13,13 +14,21 @@ export function validRelease(kind, m) {
   if (m.url !== `https://github.com/${repos[kind]}/releases/tag/${m.tag}` || m.checksums !== prefix + 'SHA256SUMS') return false;
   if (!m.assets.every(a => a && typeof a.name === 'string' && a.url === prefix + a.name && Number.isSafeInteger(a.bytes) && a.bytes > 0)) return false;
   return kind === 'app'
-    ? m.assets.filter(a => a.platform === 'macos').length === 1 && m.assets.some(a => a.platform === 'android' && a.architecture === 'ARM64')
+    ? m.assets.every(a => { const info = appAsset(a.name); return info && info.platform === a.platform && info.architecture === a.architecture; }) && m.assets.some(a => a.platform === 'macos' && a.architecture === 'Apple Silicon') && m.assets.some(a => a.platform === 'android' && a.architecture === 'ARM64')
     : m.assets.some(a => a.platform === 'linux-amd64' && typeof a.label === 'string');
 }
 export async function loadRelease(env, kind) {
   try {
     const value = await env.RELEASES?.get(releaseKeys[kind], { type: 'json', cacheTtl: 60 });
-    if (validRelease(kind, value)) return value;
+    if (validRelease(kind, value)) {
+      // Older CI manifests omitted desktop/TV assets. Supplement only the same
+      // release from the verified bundled snapshot; never mix version tags.
+      if (kind === 'app' && value.tag === snapshots.app.tag) {
+        const names = new Set(value.assets.map(a => a.name));
+        return {...value, assets: sortAppAssets([...value.assets, ...snapshots.app.assets.filter(a => !names.has(a.name))])};
+      }
+      return value;
+    }
   } catch {}
   return snapshots[kind];
 }

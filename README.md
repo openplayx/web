@@ -33,7 +33,7 @@ No framework or runtime package is needed by visitors. `content/copy.mjs` contai
 
 ## Downloads
 
-The home and download pages (both languages), `/release.json` and the account center's Connector packages are rendered by the Worker from the Cloudflare KV namespace `openplayx-web-releases` (binding `RELEASES`, keys `release/openplayx` and `release/connector`). After a published production release, the Jenkins release job writes the new manifest there (`build/scripts/release/website_manifest.py`), so the site shows the new version within about a minute without a redeploy. The Worker validates the value (version tag, GitHub release URLs, macOS ZIP and Android ARM64 APK present) and otherwise falls back to the bundled snapshots `content/releases.json` and `content/connector-release.json`.
+The home and download pages (both languages), `/release.json` and the account center's Connector packages are rendered by the Worker from the Cloudflare KV namespace `openplayx-web-releases` (binding `RELEASES`, keys `release/openplayx` and `release/connector`). After a published production release, the Jenkins release job writes the new manifest there (`build/scripts/release/website_manifest.py`), so the site shows the new version within about a minute without a redeploy. The Worker validates the value (version tag, GitHub release URLs, macOS Apple Silicon ZIP and Android ARM64 APK present) and otherwise falls back to the bundled snapshots `content/releases.json` and `content/connector-release.json`.
 
 Refresh the snapshots occasionally so the fallback stays recent:
 
@@ -42,6 +42,8 @@ npm run refresh:releases     # reads GitHub's public API; optional GITHUB_TOKEN 
 npm run build
 npm run check
 ```
+
+The home page and download page list available macOS (Universal, Apple Silicon, Intel), Windows, Linux, Android, Android TV and experimental Apple TV (tvOS) packages from the manifest. Release filenames are matched explicitly, so TV APKs and desktop ZIPs keep their own platforms. The bundled snapshot includes v0.0.4 and supplements omitted assets in a KV manifest with the same tag. Assets are never mixed across release versions.
 
 Installers remain hosted on GitHub, not copied to Cloudflare.
 
@@ -121,3 +123,5 @@ Jenkins `web/site-publish` and the legacy `web/deploy` share the same full-run
 production lock. The private build repository pins docs as a companion, packages
 one Worker plus all assets, blocks old web-only archives, verifies the public
 site and restores the previous complete Worker version if verification fails.
+
+Apple TV downloads use a distinct `tvos` platform and an ARM64 IPA. The home page links to its download card; both languages explain that it includes FFmpeg, Whisper and the remote-access core, requires re-signing, and has simulator rather than physical-device validation.

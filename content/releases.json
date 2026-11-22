@@ -1,13 +1,85 @@
 {
-  "tag": "v0.0.1",
-  "url": "https://github.com/openplayx/openplayx/releases/tag/v0.0.1",
-  "checkedAt": "2026-11-15",
+  "tag": "v0.0.4",
+  "url": "https://github.com/openplayx/openplayx/releases/tag/v0.0.4",
+  "checkedAt": "2026-11-22",
   "assets": [
-    { "platform": "macos", "architecture": "Apple Silicon", "name": "openplayx-0.0.1-macos-arm64-d8c269cc38.zip", "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.1/openplayx-0.0.1-macos-arm64-d8c269cc38.zip", "bytes": 87203778 },
-    { "platform": "android", "architecture": "ARM64", "name": "openplayx-0.0.1-android-arm64-d8c269cc38.apk", "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.1/openplayx-0.0.1-android-arm64-d8c269cc38.apk", "bytes": 91530790 },
-    { "platform": "android", "architecture": "ARMv7", "name": "openplayx-0.0.1-android-armv7-d8c269cc38.apk", "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.1/openplayx-0.0.1-android-armv7-d8c269cc38.apk", "bytes": 84358718 },
-    { "platform": "android", "architecture": "x86_64", "name": "openplayx-0.0.1-android-x64-d8c269cc38.apk", "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.1/openplayx-0.0.1-android-x64-d8c269cc38.apk", "bytes": 100279810 },
-    { "platform": "android", "architecture": "Universal", "name": "openplayx-0.0.1-android-d8c269cc38.apk", "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.1/openplayx-0.0.1-android-d8c269cc38.apk", "bytes": 268496170 }
+    {
+      "platform": "macos",
+      "architecture": "Universal",
+      "name": "openplayx-0.0.4-macos-universal-71d9169c87.zip",
+      "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.4/openplayx-0.0.4-macos-universal-71d9169c87.zip",
+      "bytes": 101255090
+    },
+    {
+      "platform": "macos",
+      "architecture": "Apple Silicon",
+      "name": "openplayx-0.0.4-macos-arm64-71d9169c87.zip",
+      "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.4/openplayx-0.0.4-macos-arm64-71d9169c87.zip",
+      "bytes": 48836028
+    },
+    {
+      "platform": "macos",
+      "architecture": "Intel",
+      "name": "openplayx-0.0.4-macos-x86_64-71d9169c87.zip",
+      "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.4/openplayx-0.0.4-macos-x86_64-71d9169c87.zip",
+      "bytes": 55139374
+    },
+    {
+      "platform": "windows",
+      "architecture": "x86_64",
+      "name": "openplayx-0.0.4-windows-x64-71d9169c87.zip",
+      "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.4/openplayx-0.0.4-windows-x64-71d9169c87.zip",
+      "bytes": 119152934
+    },
+    {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "name": "openplayx-0.0.4-linux-amd64-71d9169c87.AppImage",
+      "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.4/openplayx-0.0.4-linux-amd64-71d9169c87.AppImage",
+      "bytes": 170637816
+    },
+    {
+      "platform": "android",
+      "architecture": "Universal",
+      "name": "openplayx-0.0.4-android-71d9169c87.apk",
+      "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.4/openplayx-0.0.4-android-71d9169c87.apk",
+      "bytes": 336568524
+    },
+    {
+      "platform": "android",
+      "architecture": "ARM64",
+      "name": "openplayx-0.0.4-android-arm64-71d9169c87.apk",
+      "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.4/openplayx-0.0.4-android-arm64-71d9169c87.apk",
+      "bytes": 113826248
+    },
+    {
+      "platform": "android",
+      "architecture": "ARMv7",
+      "name": "openplayx-0.0.4-android-armv7-71d9169c87.apk",
+      "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.4/openplayx-0.0.4-android-armv7-71d9169c87.apk",
+      "bytes": 105359840
+    },
+    {
+      "platform": "android",
+      "architecture": "x86_64",
+      "name": "openplayx-0.0.4-android-x64-71d9169c87.apk",
+      "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.4/openplayx-0.0.4-android-x64-71d9169c87.apk",
+      "bytes": 127441316
+    },
+    {
+      "platform": "android-tv",
+      "architecture": "Universal",
+      "name": "openplayx-0.0.4-android-tv-71d9169c87.apk",
+      "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.4/openplayx-0.0.4-android-tv-71d9169c87.apk",
+      "bytes": 214150504
+    },
+    {
+      "platform": "tvos",
+      "architecture": "ARM64",
+      "name": "openplayx-0.0.4-tvos-arm64-1b353cc389.ipa",
+      "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.4/openplayx-0.0.4-tvos-arm64-1b353cc389.ipa",
+      "bytes": 43220618
+    }
   ],
-  "checksums": "https://github.com/openplayx/openplayx/releases/download/v0.0.1/SHA256SUMS"
+  "checksums": "https://github.com/openplayx/openplayx/releases/download/v0.0.4/SHA256SUMS"
 }

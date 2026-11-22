@@ -4,7 +4,7 @@
   "language": "中文",
   "languageLabel": "Switch to Chinese",
   "title": "OpenPlayX — Your media. Your rules.",
-  "description": "A local-first media player with a personal library, an AI assistant and an open MCP ecosystem. Download OpenPlayX for macOS and Android.",
+  "description": "A local-first media player with a personal library, an AI assistant and an open MCP ecosystem. Download for macOS, Windows, Linux, Android and Android TV.",
   "nav": [
     "Features",
     "Ecosystem",
@@ -21,7 +21,7 @@
   "primary": "Get OpenPlayX",
   "secondary": "Explore the experience",
   "release": "Early access",
-  "releaseDetail": "macOS Apple Silicon & Android",
+  "releaseDetail": "{platforms}",
   "previewLabel": "A look at the experience",
   "previewNote": "Illustrative interface · original sample artwork",
   "previewTabs": [
@@ -174,7 +174,7 @@
     ],
     [
       "Which platforms can I download?",
-      "The current v0.0.1 release includes a macOS Apple Silicon ZIP and Android APKs. iOS, Windows and Linux are still being developed or validated; there are no download buttons for unavailable packages."
+      "The current release offers {platforms}. The download page lists the packages and architectures available for this version."
     ],
     [
       "Is it open source?",
@@ -209,16 +209,16 @@
   "releaseNotes": "Release notes",
   "checksums": "Verify checksums",
   "macTitle": "macOS",
-  "macDesc": "For Macs with Apple Silicon. Download the ZIP, extract it, then move OpenPlayX to Applications.",
+  "macDesc": "Download the ZIP, extract it, then move OpenPlayX to Applications. Choose the package for your Mac below.",
   "macButton": "Download for Mac",
-  "macNote": "Early build · Apple Silicon only",
+  "macNote": "Early build",
   "androidTitle": "Android",
   "androidDesc": "Download an APK directly from our GitHub release. Android may ask you to allow installation from your browser.",
   "androidButton": "Download ARM64 APK",
   "androidNote": "Android 10+ · Most modern devices",
-  "moreBuilds": "Other Android packages",
+  "moreBuilds": "Other packages",
   "futureTitle": "More screens, in progress.",
-  "futureText": "iOS, Windows and Linux have development work in progress. Apple TV and Android TV are not available as validated releases. Follow GitHub for progress.",
+  "futureText": "iOS has no public installer download yet. The experimental Apple TV IPA requires re-signing. Follow development on GitHub.",
   "follow": "Follow development",
   "installTitle": "Before you install",
   "installNotes": [
@@ -303,5 +303,23 @@
   "navLabel": "Main navigation",
   "account": "Account",
   "themeLabel": "Toggle theme",
-  "docs": "Docs"
+  "docs": "Docs",
+  "windowsTitle": "Windows",
+  "windowsDesc": "Extract the ZIP and run openplayx.exe. The Visual C++ runtime is included. The app is not code-signed yet; SmartScreen may prompt on first launch.",
+  "windowsButton": "Download for Windows",
+  "windowsNote": "x86_64 · ZIP",
+  "linuxTitle": "Linux",
+  "linuxDesc": "For x86_64 Linux with glibc 2.39+ (Ubuntu 24.04 baseline). Make the AppImage executable and run it. If FUSE is unavailable, use --appimage-extract-and-run.",
+  "linuxButton": "Download for Linux",
+  "linuxNote": "x86_64 · AppImage",
+  "linuxTarDesc": "Extract the archive and run ./openplayx. Requires system VLC, libsecret, GTK 3 and WebKitGTK libraries.",
+  "tvTitle": "Android TV",
+  "tvDesc": "For Android TV and Google TV devices. Download the TV APK and install it on your television or streaming box.",
+  "tvButton": "Download TV APK",
+  "tvNote": "TV edition",
+  "homeDownloads": "Available downloads",
+  "appleTvTitle": "Apple TV",
+  "appleTvDesc": "Experimental Apple TV build with FFmpeg, Whisper and the remote-access core. Re-sign the unsigned IPA with your own Apple developer account before sideloading. Not yet verified on hardware.",
+  "appleTvButton": "Download Apple TV IPA",
+  "appleTvNote": "Experimental · Re-signing required"
 }

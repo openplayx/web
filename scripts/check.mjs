@@ -3,13 +3,13 @@ import { readFile, access } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {pageResponse} from '../src/pages/index.mjs';
+import {validRelease} from '../src/releases.mjs';
 import { pages } from '../src/render.mjs';
 import { copy } from '../content/copy.mjs';
 import release from '../content/releases.json' with { type: 'json' };
 const root=fileURLToPath(new URL('../dist/',import.meta.url));
 assert.deepEqual(Object.keys(copy.en).sort(),Object.keys(copy.zh).sort(),'Both languages must have the same content keys');
-assert.equal(release.assets.filter(a=>a.platform==='macos').length,1);
-assert.equal(release.assets.filter(a=>a.platform==='android').length,4);
+assert(validRelease('app',release),'Bundled app manifest must be valid');
 for(const asset of release.assets){
   assert(asset.url.startsWith(`https://github.com/openplayx/openplayx/releases/download/${release.tag}/`));
   assert(asset.bytes>0);assert(!asset.url.includes('<'));
