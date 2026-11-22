@@ -73,12 +73,24 @@ This unsigned experimental tvOS 15+ ARM64 IPA requires developer re-signing befo
 Deployed Worker `820d84b2-ed33-41e0-b802-ee1d51fc3bfa`. Both home/download pages, the bundled release snapshot and production KV now offer 12 installers, including these replacement tvOS 17+ ARM64 builds from app commit `b58c93e793` and Whisper commit `83ff1cf`:
 
 - Sideload/re-sign: `openplayx-0.0.4-tvos-arm64-b58c93e793.ipa`, 131,935,637 bytes, SHA-256 `7861930631fa664568c30cbcb6b08bcfb62461157be91fef1ac5e603270b92e4`.
-- Apple Distribution App Store export: `openplayx-0.0.4-tvos-appstore-arm64-b58c93e793.ipa`, 152,421,098 bytes, SHA-256 `3429f8edf5ab4d635c8e176551ab7a34a806f1120181b6f09da41c7b79b7f1ae`.
+- Apple Distribution App Store export: `openplayx-0.0.4-tvos-appstore-arm64-b58c93e793.ipa`, 152,421,094 bytes, SHA-256 `11e176abe90696452265970c0c1e5e0b99283dcad95267092bc4d8de228c1cb8`.
 
-The primary button stays on the re-signable IPA. The signed export is for Apple distribution and cannot be installed directly on arbitrary devices. No TestFlight upload or invitation was performed. Both GitHub asset URLs return HTTP 200 with the expected sizes; production English/Chinese home and download pages and `/release.json` contain the current assets and exclude the superseded initial IPA.
+The primary button stays on the re-signable IPA. The signed export is for Apple distribution and cannot be installed directly on arbitrary devices. The original export was not uploaded to TestFlight; the corrected signature was subsequently uploaded as recorded below. Both GitHub asset URLs return HTTP 200 with the expected sizes; production English/Chinese home and download pages and `/release.json` contain the current assets and exclude the superseded initial IPA.
 
 The build adds native Sentry/PostHog, local file/folder selection, nearby-device authentication, Continuity recording integration, BGTaskScheduler integration, bundled verified Whisper tiny/Core ML models and Metal/Core ML/Accelerate backends. Existing VLC, full FFmpeg codecs and sing-box remain included. The native PostHog tvOS SDK does not offer iOS-only replay, surveys or push APIs. Simulator Metal is disabled after a reproducible simulator driver crash; physical tvOS still enables Metal. See the application `docs/tvos.md` for exact API and hardware limits.
 
 Validation passed native simulator capture to local Sentry/PostHog endpoints, offline model restoration and real transcription, native channel registration, 51 feature regression tests and 44 final regression tests. The simulator cannot verify Continuity input, real nearby-device login, system background execution or Siri Remote behavior; these remain physical-device checks. The final normal application entry also builds and launches on the simulator. The release was built from isolated committed sources; the App Store export passed deep/strict code-sign verification with Apple Distribution authority.
 
 Website deployment passed 34 tests, Worker/session integration and the bilingual build/reference checks. Build infrastructure validation and six manifest tests passed. The older Apple TV section above records the superseded initial release rather than the current download requirements.
+
+## Apple TV TestFlight upload (2026-11-22)
+
+Created the TV_OS platform for the existing OpenPlayX App Store Connect app and
+successfully uploaded version 0.0.4 (4). The first upload exposed a Sentry static
+resource framework identifier mismatch; normalizing its linker-generated ad-hoc
+signature before Apple export fixed the validation failure. The corrected signed
+IPA and SHA256SUMS replace the prior signed export in GitHub Release. The sideload
+IPA and application functionality are unchanged. Processing, compliance and beta
+review are distinct from successful upload; the shared public group invitation
+is https://testflight.apple.com/join/dmt8K5er and does not guarantee tvOS build
+availability. Apple’s current TestFlight client requires tvOS 18+.

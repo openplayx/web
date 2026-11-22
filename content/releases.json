@@ -85,7 +85,7 @@
       "architecture": "ARM64 · App Store",
       "name": "openplayx-0.0.4-tvos-appstore-arm64-b58c93e793.ipa",
       "url": "https://github.com/openplayx/openplayx/releases/download/v0.0.4/openplayx-0.0.4-tvos-appstore-arm64-b58c93e793.ipa",
-      "bytes": 152421098
+      "bytes": 152421094
     }
   ],
   "checksums": "https://github.com/openplayx/openplayx/releases/download/v0.0.4/SHA256SUMS"
