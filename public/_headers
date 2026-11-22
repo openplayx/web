@@ -6,3 +6,7 @@
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://us.i.posthog.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'
 /assets/*
   Cache-Control: public, max-age=3600
+# iOS Password AutoFill: lets the App save and suggest passwords for this site.
+/.well-known/apple-app-site-association
+  Content-Type: application/json
+  Cache-Control: public, max-age=3600
