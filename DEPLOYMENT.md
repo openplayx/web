@@ -7,7 +7,7 @@ Checked on 2026-11-22.
 - Worker: `openplayx-web`, Cloudflare Workers Static Assets.
 - Production: https://openplayx.com/ and https://www.openplayx.com/.
 - Production Chinese: https://openplayx.com/zh/.
-- Deployed version: `f53d7ace-6968-427f-af70-e498552e0a5f`.
+- Deployed version: `820d84b2-ed33-41e0-b802-ee1d51fc3bfa`.
 - Default English: https://openplayx-web.zhyoulun.workers.dev/
 - Chinese: https://openplayx-web.zhyoulun.workers.dev/zh/
 - All 10 localized pages, CSS and JavaScript returned HTTP 200; an unknown path returned HTTP 404. Security headers were present.
@@ -67,3 +67,18 @@ Deployed Worker `f53d7ace-6968-427f-af70-e498552e0a5f` with a separate Apple TV 
 This unsigned experimental tvOS 15+ ARM64 IPA requires developer re-signing before sideloading. It includes native VLC, the full FFmpeg codec build, whisper.cpp CPU recognition and sing-box transport. Real tvOS 27.2 simulator checks passed SQLite/cache storage, FFmpeg probe/snapshot, Whisper tiny-model transcription, remote-core lifecycle and VLC decode/pause/seek/resume. Physical-device and Siri Remote validation remain pending.
 
 `npm run deploy` passed 33 website tests, Worker/session integration, bilingual docs generation, 264 website-reference checks and real Static Assets routing checks. Production checks confirmed both home pages, both download pages, Apple TV download targets and re-signing notices, `/release.json` and `/health`. The final IPA contains only release resources, with the required Payload directory and all native frameworks; old IPAs, debug snapshots and model/test-report files are excluded.
+
+## Complete Apple TV update (2026-11-22, supersedes the initial build)
+
+Deployed Worker `820d84b2-ed33-41e0-b802-ee1d51fc3bfa`. Both home/download pages, the bundled release snapshot and production KV now offer 12 installers, including these replacement tvOS 17+ ARM64 builds from app commit `b58c93e793` and Whisper commit `83ff1cf`:
+
+- Sideload/re-sign: `openplayx-0.0.4-tvos-arm64-b58c93e793.ipa`, 131,935,637 bytes, SHA-256 `7861930631fa664568c30cbcb6b08bcfb62461157be91fef1ac5e603270b92e4`.
+- Apple Distribution App Store export: `openplayx-0.0.4-tvos-appstore-arm64-b58c93e793.ipa`, 152,421,098 bytes, SHA-256 `3429f8edf5ab4d635c8e176551ab7a34a806f1120181b6f09da41c7b79b7f1ae`.
+
+The primary button stays on the re-signable IPA. The signed export is for Apple distribution and cannot be installed directly on arbitrary devices. No TestFlight upload or invitation was performed. Both GitHub asset URLs return HTTP 200 with the expected sizes; production English/Chinese home and download pages and `/release.json` contain the current assets and exclude the superseded initial IPA.
+
+The build adds native Sentry/PostHog, local file/folder selection, nearby-device authentication, Continuity recording integration, BGTaskScheduler integration, bundled verified Whisper tiny/Core ML models and Metal/Core ML/Accelerate backends. Existing VLC, full FFmpeg codecs and sing-box remain included. The native PostHog tvOS SDK does not offer iOS-only replay, surveys or push APIs. Simulator Metal is disabled after a reproducible simulator driver crash; physical tvOS still enables Metal. See the application `docs/tvos.md` for exact API and hardware limits.
+
+Validation passed native simulator capture to local Sentry/PostHog endpoints, offline model restoration and real transcription, native channel registration, 51 feature regression tests and 44 final regression tests. The simulator cannot verify Continuity input, real nearby-device login, system background execution or Siri Remote behavior; these remain physical-device checks. The final normal application entry also builds and launches on the simulator. The release was built from isolated committed sources; the App Store export passed deep/strict code-sign verification with Apple Distribution authority.
+
+Website deployment passed 34 tests, Worker/session integration and the bilingual build/reference checks. Build infrastructure validation and six manifest tests passed. The older Apple TV section above records the superseded initial release rather than the current download requirements.
