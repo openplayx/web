@@ -1,18 +1,24 @@
 # Deployment status
 
-Checked on 2026-11-21.
+Checked on 2026-11-22.
 
 ## Live website
 
 - Worker: `openplayx-web`, Cloudflare Workers Static Assets.
 - Production: https://openplayx.com/ and https://www.openplayx.com/.
 - Production Chinese: https://openplayx.com/zh/.
-- Deployed version: `a97a959c-d3f9-424c-a717-2a68b7e140ea`.
+- Deployed version: `f53d7ace-6968-427f-af70-e498552e0a5f`.
 - Default English: https://openplayx-web.zhyoulun.workers.dev/
 - Chinese: https://openplayx-web.zhyoulun.workers.dev/zh/
 - All 10 localized pages, CSS and JavaScript returned HTTP 200; an unknown path returned HTTP 404. Security headers were present.
 - Desktop and mobile browser checks covered language switching, the mobile navigation, illustrative preview tabs and download pages.
 - `npm run build`, `npm run check` and deployment passed. The checker validated 222 local references and release metadata.
+
+## Download platforms update (2026-11-22)
+
+Published the complete website with v0.0.4 downloads: macOS Universal, Apple Silicon and Intel; Windows x86_64; Linux x86_64 AppImage; Android ARM64, ARMv7, x86_64 and Universal; Android TV. Both home pages link to platform cards, and the Worker supplements omitted assets in the existing same-tag KV manifest from the bundled snapshot. Future CI manifests now retain desktop and TV packages.
+
+`npm run deploy` passed 32 website tests, Worker integration, the complete bilingual docs/site build, 262 local-reference checks and real Static Assets routing checks. Production checks confirmed English and Chinese home/download pages, all 10 installer links, `/release.json`, bilingual docs, an SMB deep route, account and health routes, plus the www download page.
 
 ## Full analytics update (2026-11-21)
 
@@ -53,3 +59,11 @@ npm run deploy
 The configured canonical URLs and sitemap target `https://openplayx.com`. The `workers.dev` URL stays available as a preview. Deployment touches only this website Worker and its two custom domains; the existing MCP service is separate.
 
 No credentials are stored in this repository. Deployment uses the operator's local Wrangler authentication.
+
+## Apple TV update (2026-11-22)
+
+Deployed Worker `f53d7ace-6968-427f-af70-e498552e0a5f` with a separate Apple TV card and home-page entry in both languages. The v0.0.4 release now has 11 installers; the Apple TV asset is `openplayx-0.0.4-tvos-arm64-1b353cc389.ipa` (43,220,618 bytes, SHA-256 `86e123d8574aca348298f91f17bd67d3f2082480131818b03e7750f76e436b62`). GitHub re-download matched the local build. SHA256SUMS, release notes, the bundled website snapshot and Cloudflare KV all include the same asset.
+
+This unsigned experimental tvOS 15+ ARM64 IPA requires developer re-signing before sideloading. It includes native VLC, the full FFmpeg codec build, whisper.cpp CPU recognition and sing-box transport. Real tvOS 27.2 simulator checks passed SQLite/cache storage, FFmpeg probe/snapshot, Whisper tiny-model transcription, remote-core lifecycle and VLC decode/pause/seek/resume. Physical-device and Siri Remote validation remain pending.
+
+`npm run deploy` passed 33 website tests, Worker/session integration, bilingual docs generation, 264 website-reference checks and real Static Assets routing checks. Production checks confirmed both home pages, both download pages, Apple TV download targets and re-signing notices, `/release.json` and `/health`. The final IPA contains only release resources, with the required Payload directory and all native frameworks; old IPAs, debug snapshots and model/test-report files are excluded.
