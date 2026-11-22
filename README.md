@@ -125,3 +125,5 @@ one Worker plus all assets, blocks old web-only archives, verifies the public
 site and restores the previous complete Worker version if verification fails.
 
 Apple TV downloads use a distinct `tvos` platform and an ARM64 IPA. The home page links to its download card; both languages explain that it includes FFmpeg, Whisper and the remote-access core, requires re-signing, and has simulator rather than physical-device validation.
+
+The extended Apple TV build requires tvOS 17+ and includes offline Whisper/Core ML models, platform services and telemetry. Downloads distinguish the re-signable IPA from the Apple Distribution signed App Store export; the signed export does not permit arbitrary-device sideloading.

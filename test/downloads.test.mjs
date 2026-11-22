@@ -45,7 +45,20 @@ test('Apple TV IPA is distinct from Android TV and rejects the wrong format',()=
   for(const lang of ['en','zh']) {
     const doc=new JSDOM(render(lang,'download',false,release)).window.document;
     assert.equal(doc.querySelector('#download-tvos .button').href,asset.url);
-    assert.match(doc.querySelector('#download-tvos').textContent,lang==='en'?/Re-signing required/:/需重新签名/);
+    assert.match(doc.querySelector('#download-tvos').textContent,lang==='en'?/Re-sign the sideload IPA/:/侧载包需重签名/);
     assert.ok(new JSDOM(render(lang,'',false,release)).window.document.querySelector('a[href$="#download-tvos"]'));
+  }
+});
+
+test('Apple TV App Store export is secondary to the re-signable IPA',()=>{
+  const name='openplayx-0.0.4-tvos-appstore-arm64-abcdef1234.ipa';
+  const info=appAsset(name);
+  assert.deepEqual(info,{platform:'tvos',architecture:'ARM64 · App Store'});
+  const signed={...info,name,url:`https://github.com/openplayx/openplayx/releases/download/v0.0.4/${name}`,bytes:1000000};
+  const release={...snapshot,assets:[signed,...snapshot.assets]};
+  for(const lang of ['en','zh']) {
+    const doc=new JSDOM(render(lang,'download',false,release)).window.document;
+    assert.ok(!doc.querySelector('#download-tvos .button').href.includes('-appstore-'));
+    assert.equal([...doc.querySelectorAll('#download-tvos a')].filter(a=>a.href===signed.url).length,1);
   }
 });

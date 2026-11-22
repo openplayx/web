@@ -73,7 +73,7 @@ function home(c, lang, releases) {
 function downloads(c,lang,releases) {
   const cards = availablePlatforms(releases).map(platform => {
     const assets = releases.assets.filter(a=>a.platform===platform);
-    const preferred = platform==='macos' ? ['Universal','Apple Silicon'] : platform==='android' ? ['ARM64'] : ['x86_64'];
+    const preferred = platform==='macos' ? ['Universal','Apple Silicon'] : (platform==='android' || platform==='tvos') ? ['ARM64'] : ['x86_64'];
     const primary = preferred.map(arch=>assets.find(a=>a.architecture===arch)).find(Boolean) || assets[0];
     const others = assets.filter(a=>a!==primary);
     const key = platformKeys[platform];

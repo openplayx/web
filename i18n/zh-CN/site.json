@@ -319,7 +319,7 @@
   "tvNote": "电视专用版本",
   "homeDownloads": "可下载平台",
   "appleTvTitle": "Apple TV",
-  "appleTvDesc": "Apple TV 实验版，包含 FFmpeg、Whisper 和远程访问核心。IPA 未签名，需用自己的 Apple 开发者账号重新签名后侧载；尚未真机验证。",
-  "appleTvButton": "下载 Apple TV IPA",
-  "appleTvNote": "实验版 · 需重新签名"
+  "appleTvDesc": "tvOS 17+，支持离线字幕识别、FFmpeg 媒体处理、远程访问、附近设备登录和 iPhone/iPad 接续录音。侧载包需重签名；另附用于 Apple 分发的 App Store 签名包，不能直接侧载。真机验证待完成。",
+  "appleTvButton": "下载侧载 IPA",
+  "appleTvNote": "实验版 · 另附 Apple 签名构建"
 }

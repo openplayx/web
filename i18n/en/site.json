@@ -319,7 +319,7 @@
   "tvNote": "TV edition",
   "homeDownloads": "Available downloads",
   "appleTvTitle": "Apple TV",
-  "appleTvDesc": "Experimental Apple TV build with FFmpeg, Whisper and the remote-access core. Re-sign the unsigned IPA with your own Apple developer account before sideloading. Not yet verified on hardware.",
-  "appleTvButton": "Download Apple TV IPA",
-  "appleTvNote": "Experimental · Re-signing required"
+  "appleTvDesc": "tvOS 17+ with offline transcription, FFmpeg processing, remote access, nearby-device sign-in and iPhone/iPad Continuity recording. Re-sign the sideload IPA. The separate App Store signed export is for Apple distribution, not direct installation. Hardware validation is pending.",
+  "appleTvButton": "Download sideload IPA",
+  "appleTvNote": "Experimental · Apple signed export included"
 }
