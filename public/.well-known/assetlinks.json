@@ -1,0 +1,16 @@
+[
+  {
+    "relation": ["delegate_permission/common.get_login_creds"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.openplayx.app",
+      "sha256_cert_fingerprints": [
+        "CE:F7:F5:2B:C6:27:A2:A1:05:00:96:5A:39:94:0B:5F:7E:E0:8B:5C:7C:A6:BE:AD:45:C0:11:63:3F:DB:D7:D6"
+      ]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.get_login_creds"],
+    "target": {"namespace": "web", "site": "https://openplayx.com"}
+  }
+]
