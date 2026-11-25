@@ -7,7 +7,9 @@ const androidArch={arm64:'ARM64',armv7:'ARMv7',x64:'x86_64'};
 function releaseAsset(url){
   const m=url.hostname==='github.com'&&url.pathname.match(/^\/openplayx\/openplayx\/releases\/download\/([^/]+)\/([^/]+)$/);if(!m)return null;
   const [,tag,name]=m,android=name.match(/-android(?:-(arm64|armv7|x64))?-[0-9a-f]{7,40}\.apk$/);
-  if(/-macos-arm64-[0-9a-f]{7,40}\.zip$/.test(name))return {tag,name,platform:'macos',architecture:'Apple Silicon'};
+  const mac=name.match(/-macos-(arm64|x86_64|universal)-[0-9a-f]{7,40}\.(dmg|zip)$/);
+  if(mac)return {tag,name,platform:'macos',architecture:{arm64:'Apple Silicon',x86_64:'Intel',universal:'Universal'}[mac[1]]};
+  if(/-windows-x64-[0-9a-f]{7,40}\.(exe|zip)$/.test(name))return {tag,name,platform:'windows',architecture:'x86_64'};
   return android?{tag,name,platform:'android',architecture:androidArch[android[1]]||'Universal'}:null;
 }
 

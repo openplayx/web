@@ -68,6 +68,14 @@ test('business click events are captured',()=>{
   const f=fixture();
   f.handlers.click({target:{closest:()=>({href:'https://github.com/openplayx/openplayx',closest:()=>null,matches:()=>false})}});
   assert.equal(f.captures.at(-1).event,'repository_clicked');
+  f.handlers.click({target:{closest:()=>({href:'https://github.com/openplayx/openplayx/releases/download/v0.0.5/openplayx-0.0.5-macos-universal-abcdef1234.dmg',closest:()=>null,matches:()=>false})}});
+  assert.equal(f.captures.at(-1).event,'download_clicked');
+  assert.equal(f.captures.at(-1).properties.target_platform,'macos');
+  assert.equal(f.captures.at(-1).properties.architecture,'Universal');
+  f.handlers.click({target:{closest:()=>({href:'https://github.com/openplayx/openplayx/releases/download/v0.0.5/openplayx-0.0.5-windows-x64-abcdef1234.exe',closest:()=>null,matches:()=>false})}});
+  assert.equal(f.captures.at(-1).event,'download_clicked');
+  assert.equal(f.captures.at(-1).properties.target_platform,'windows');
+  assert.equal(f.captures.at(-1).properties.architecture,'x86_64');
 });
 
 test('automatic metrics retain context and payloads while stripping URL secrets',()=>{

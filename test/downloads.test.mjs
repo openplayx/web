@@ -32,8 +32,32 @@ test('legacy same-tag KV manifests gain omitted packages; other versions keep th
   assert.equal(doc.querySelector('#download-windows'),null);
 });
 test('package classification rejects unknown targets and wrong formats',()=>{
-  for(const name of ['openplayx-0.0.4-ios-arm64-abcdef1234.zip','openplayx-0.0.4-windows-x64-abcdef1234.apk','openplayx-0.0.4-android-tv-abcdef1234.zip','arbitrary.zip']) assert.equal(appAsset(name),null);
+  for(const name of ['openplayx-0.0.4-ios-arm64-abcdef1234.zip','openplayx-0.0.4-windows-x64-abcdef1234.apk','openplayx-0.0.4-android-tv-abcdef1234.zip','openplayx-0.0.4-windows-x64-abcdef1234.dmg','openplayx-0.0.4-macos-arm64-abcdef1234.exe','arbitrary.zip']) assert.equal(appAsset(name),null);
   const invalid=structuredClone(snapshot);invalid.assets[0].platform='android';assert.equal(validRelease('app',invalid),false);
+});
+
+test('Windows EXE installer classifies and renders with EXE copy while keeping ZIP fallback',()=>{
+  assert.deepEqual(appAsset('openplayx-0.0.5-windows-x64-abcdef1234.exe'),{platform:'windows',architecture:'x86_64'});
+  const exeRelease={...snapshot,assets:snapshot.assets.map(a=>a.platform==='windows'?{...a,name:a.name.replace(/\.zip$/,'.exe'),url:a.url.replace(/\.zip$/,'.exe')}:a)};
+  assert.ok(validRelease('app',exeRelease));
+  for(const lang of ['en','zh']) {
+    const doc=new JSDOM(render(lang,'download',false,exeRelease)).window.document;
+    assert.match(doc.querySelector('#download-windows .button').href,/\.exe$/);
+    assert.match(doc.querySelector('#download-windows').textContent,/EXE/);
+  }
+});
+
+test('macOS DMG installers classify and render with DMG copy while keeping ZIP fallback',()=>{
+  assert.deepEqual(appAsset('openplayx-0.0.5-macos-universal-abcdef1234.dmg'),{platform:'macos',architecture:'Universal'});
+  assert.deepEqual(appAsset('openplayx-0.0.5-macos-arm64-abcdef1234.dmg'),{platform:'macos',architecture:'Apple Silicon'});
+  assert.deepEqual(appAsset('openplayx-0.0.5-macos-x86_64-abcdef1234.dmg'),{platform:'macos',architecture:'Intel'});
+  const dmgRelease={...snapshot,assets:snapshot.assets.map(a=>a.platform==='macos'?{...a,name:a.name.replace(/\.zip$/,'.dmg'),url:a.url.replace(/\.zip$/,'.dmg')}:a)};
+  assert.ok(validRelease('app',dmgRelease));
+  for(const lang of ['en','zh']) {
+    const doc=new JSDOM(render(lang,'download',false,dmgRelease)).window.document;
+    assert.match(doc.querySelector('#download-macos .button').href,/\.dmg$/);
+    assert.match(doc.querySelector('#download-macos').textContent,/DMG/);
+  }
 });
 
 test('Apple TV IPA is distinct from Android TV and rejects the wrong format',()=>{
