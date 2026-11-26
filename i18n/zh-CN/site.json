@@ -3,8 +3,14 @@
   "locale": "zh_CN",
   "language": "English",
   "languageLabel": "Switch to English",
-  "title": "OpenPlayX — 你的媒体，你做主。",
-  "description": "本地优先的媒体播放器，连接个人媒体库、AI 助手与开放的 MCP 生态。下载 macOS、Windows、Linux、Android 和 Android TV 版本。",
+  "title": "OpenPlayX — 本地优先媒体播放器，支持 NAS、Jellyfin/Plex、AI 字幕与 MCP",
+  "description": "开源、本地优先的跨平台媒体播放器，内置 libmpv 与 libVLC 双引擎。直连 SMB、WebDAV、Jellyfin、Plex、Emby 与网盘，支持 Whisper AI 字幕生成与对齐及开放 MCP 扩展，覆盖 macOS、Windows、Linux、Android、Android TV 与 Apple TV。",
+  "pageDescriptions": {
+    "download": "下载 OpenPlayX 最新安装包，支持 macOS（DMG）、Windows（EXE）、Linux（AppImage）、Android、Android TV 与 Apple TV（tvOS），附 SHA-256 校验值与更新日志。",
+    "ecosystem": "探索 OpenPlayX 开放 MCP 扩展生态：可独立部署的联网搜索、豆瓣与 IMDb 元数据、yt-dlp、qBittorrent 与 whisper.cpp 语音识别服务。",
+    "contribute": "参与 OpenPlayX 开源贡献：提交可复现的问题反馈、开发新的 MCP 扩展能力、完善多语言翻译与多平台测试。",
+    "privacy": "查看 OpenPlayX 官网与文档的隐私边界说明。本地播放与个人媒体库不依赖账号或 AI 订阅。"
+  },
   "nav": [
     "产品亮点",
     "扩展生态",

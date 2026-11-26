@@ -122,6 +122,9 @@ test('docs SPA sends one pageview per article and excludes search queries and re
   f.handlers['opx:docs-navigation']();
   assert.equal(f.captures.length,2);
   assert.equal(f.captures[1].properties.$current_url,'https://openplayx.com/docs/sources/smb/');
+  f.location.pathname='/docs/zh-Hans/playback/subtitles/';
+  f.handlers['opx:docs-navigation']();
+  assert.equal(f.captures.at(-1).properties.$pathname,'/docs/zh-Hans/playback/subtitles/');
   assert(!JSON.stringify(f.captures).includes('private'));
   assert.equal(f.options.before_send({event:'$snapshot',properties:{}}),null);
   f.location.pathname='/docs/search';

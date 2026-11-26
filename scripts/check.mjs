@@ -24,6 +24,8 @@ for(const lang of ['en','zh'])for(const page of pages){
   assert.equal((html.match(/<h1[ >]/g)||[]).length,1,`${route}: one h1`);
   assert(!/undefined|\[object Object\]|TODO|lorem ipsum/i.test(html),route);
   assert(html.includes('hreflang="x-default"'));
+  assert(html.includes('type="application/ld+json"'), `${route}: missing JSON-LD`);
+  assert(html.includes('https://openplayx.com/llms.txt'), `${route}: missing llms.txt link`);
   const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
   assert.equal(ids.length,new Set(ids).size,`${route}: duplicate IDs`);
   for(const match of html.matchAll(/\b(?:href|src)="([^"]+)"/g)){
@@ -41,4 +43,12 @@ const css=await readFile(resolve(root,'assets/site.css'),'utf8');
 assert(css.includes('prefers-reduced-motion'));
 assert((await readFile(resolve(root,'index.html'),'utf8')).includes('/assets/analytics.js'));
 assert((await readFile(resolve(root,'404.html'),'utf8')).includes('noindex'));
-console.log(`Checked 10 localized pages, ${links} local references, release assets, language parity and metadata.`);
+const llmsTxt=await readFile(resolve(root,'llms.txt'),'utf8');
+assert(llmsTxt.includes('# OpenPlayX') && llmsTxt.includes('https://openplayx.com/docs/'));
+const llmsFull=await readFile(resolve(root,'llms-full.txt'),'utf8');
+assert(llmsFull.includes('# OpenPlayX'));
+const robotsTxt=await readFile(resolve(root,'robots.txt'),'utf8');
+assert(robotsTxt.includes('OAI-SearchBot') && robotsTxt.includes('Claude-SearchBot') && robotsTxt.includes('Disallow: /account/'));
+const sitemapXml=await readFile(resolve(root,'sitemap.xml'),'utf8');
+assert(sitemapXml.includes('xmlns:xhtml=') && sitemapXml.includes('hreflang="zh-CN"'));
+console.log(`Checked 10 localized pages, ${links} local references, SEO/JSON-LD, llms.txt, sitemap, release assets and language parity.`);

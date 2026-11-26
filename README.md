@@ -49,9 +49,16 @@ Installers remain hosted on GitHub, not copied to Cloudflare.
 
 ## Cloudflare deployment
 
+Production releases are deployed through **Jenkins `web/site-publish`** (polling `openplayx/web` and `openplayx/docs` `main` every 5 minutes; `web/deploy` is the manual Jenkins entry). Do **not** bypass the Jenkins pipeline with direct local `wrangler deploy` / `npm run deploy` for routine production deployments—Jenkins pins `web`, `docs` and `build` commits under the `web-cloudflare-production` lock, verifies digests, records a rollback baseline and runs live post-deploy checks.
+
+For local verification before pushing:
+
 ```sh
-npx wrangler login          # local interactive owner authentication, if not already logged in
-npm run deploy
+npm test
+npm run test:integration
+npm run build:site
+npm run test:docs
+npm run check
 ```
 
 `wrangler.jsonc` names the Worker `openplayx-web`, serves `dist/`, and binds only `openplayx.com` and `www.openplayx.com`. It does not change `mcp-tavily.openplayx.com`, other Workers, email records or other DNS services. Cloudflare manages certificates for the custom domains. Existing conflicting domain bindings must be inspected before replacement.

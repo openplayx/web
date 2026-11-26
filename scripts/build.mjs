@@ -1,6 +1,7 @@
 import { mkdir, rm, cp, writeFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 import { render, pages } from '../src/render.mjs';
+import { renderLlmsTxt, renderLlmsFullTxt } from '../src/llms.mjs';
 import releases from '../content/releases.json' with { type: 'json' };
 const root = new URL('../', import.meta.url);
 const dist = new URL('dist/', root);
@@ -19,8 +20,26 @@ for (const lang of ['en', 'zh']) {
   }
 }
 await writeFile(new URL('404.html', dist), render('en', '', true));
-await writeFile(new URL('robots.txt', dist), 'User-agent: *\nAllow: /\nSitemap: https://openplayx.com/sitemap.xml\n');
-const routes = ['en','zh'].flatMap(lang => pages.map(page => `https://openplayx.com/${lang === 'zh' ? 'zh/' : ''}${page ? page + '/' : ''}`));
-await writeFile(new URL('sitemap.xml', dist), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${routes.map(loc => `<url><loc>${loc}</loc></url>`).join('')}</urlset>\n`);
+const aiBots = ['OAI-SearchBot', 'ChatGPT-User', 'Claude-SearchBot', 'Claude-User', 'ClaudeBot', 'PerplexityBot'];
+const robots = [
+  'User-agent: *',
+  'Allow: /',
+  'Disallow: /account/',
+  'Disallow: /v1/',
+  'Disallow: /adminzzz/',
+  '',
+  ...aiBots.flatMap(bot => [`User-agent: ${bot}`, 'Allow: /', 'Disallow: /account/', 'Disallow: /v1/', '']),
+  'Sitemap: https://openplayx.com/sitemap.xml',
+  '',
+].join('\n');
+await writeFile(new URL('robots.txt', dist), robots);
+const lastmod = releases.checkedAt || new Date().toISOString().slice(0, 10);
+const pageUrl = (lang, page) => `https://openplayx.com/${lang === 'zh' ? 'zh/' : ''}${page ? page + '/' : ''}`;
+const urlEntries = ['en','zh'].flatMap(lang => pages.map(page =>
+  `<url><loc>${pageUrl(lang, page)}</loc><lastmod>${lastmod}</lastmod><xhtml:link rel="alternate" hreflang="en" href="${pageUrl('en', page)}"/><xhtml:link rel="alternate" hreflang="zh-CN" href="${pageUrl('zh', page)}"/><xhtml:link rel="alternate" hreflang="x-default" href="${pageUrl('en', page)}"/></url>`
+));
+await writeFile(new URL('sitemap.xml', dist), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${urlEntries.join('')}</urlset>\n`);
+await writeFile(new URL('llms.txt', dist), renderLlmsTxt(releases));
+await writeFile(new URL('llms-full.txt', dist), renderLlmsFullTxt(releases));
 await writeFile(new URL('release.json', dist), JSON.stringify(releases, null, 2)+'\n');
-console.log(`Built ${routes.length} localized pages + 404. Release: ${releases.tag}`);
+console.log(`Built ${urlEntries.length} localized pages + 404 + llms.txt. Release: ${releases.tag}`);

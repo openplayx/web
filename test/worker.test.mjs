@@ -59,3 +59,17 @@ test('the account center offers the Connector packages of the KV manifest',async
  assert.ok(live.includes('"tag":"v7.7.7"'));assert.ok(!live.includes(`"tag":"${connectorSnapshot.tag}"`));
  const fallback=await (await worker.fetch(req('/account/assets/account.js'),env)).text();assert.ok(fallback.includes(`"tag":"${connectorSnapshot.tag}"`));
 });
+test('homepage and download pages emit valid JSON-LD with dynamic release version and SEO metadata',async()=>{
+ const {env}=fixture();const next=retag(snapshot,'v2.3.4');
+ const live={...env,RELEASES:kv({'release/openplayx':next})};
+ const homeHtml=await (await worker.fetch(req('/'),live)).text();
+ const match=homeHtml.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+ assert.ok(match,'JSON-LD script present on home');
+ const ld=JSON.parse(match[1]);
+ const types=ld['@graph'].map(n=>n['@type']);
+ assert.ok(types.includes('SoftwareApplication') && types.includes('FAQPage') && types.includes('Organization'));
+ assert.equal(ld['@graph'].find(n=>n['@type']==='SoftwareApplication').softwareVersion,'v2.3.4');
+ const dlHtml=await (await worker.fetch(req('/zh/download/'),live)).text();
+ assert.ok(dlHtml.includes('SHA-256'));
+ assert.ok(dlHtml.includes('BreadcrumbList'));
+});

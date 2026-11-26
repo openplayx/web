@@ -29,7 +29,12 @@ const page = docsVisit ? 'docs' : path.replace(/^\/zh(?=\/)/, '').split('/').fil
 let route = `/${zh ? 'zh/' : ''}${page === 'home' ? '' : page + '/'}`;
 function docsRoute(pathname) {
   const match=pathname.match(/^\/docs\/(zh-Hans\/)?(.*)$/);
-  const allowed=['','getting-started/first-video/','sources/smb/','library/home/','ai/models/','ai/mcp/','remote-access/connector/','help/faq/'];
+  const allowed=[
+    '','getting-started/first-video/','getting-started/tv/',
+    'playback/engines-and-pip/','playback/subtitles/',
+    'sources/smb/','sources/media-servers/','sources/cloud-drives/',
+    'library/home/','ai/models/','ai/mcp/','remote-access/connector/','help/faq/',
+  ];
   return match ? '/docs/'+(match[1]||'')+(allowed.includes(match[2])?match[2]:'404/') : '/docs/';
 }
 if (docsVisit) route=docsRoute(path);

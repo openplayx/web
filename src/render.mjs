@@ -101,14 +101,83 @@ function header(c,lang,page) {
   return `<a class="skip-link" href="#main">${e(c.skip)}</a><header class="site-header"><div class="container header-inner"><a class="brand" href="${url(lang)}" aria-label="OpenPlayX"><img src="/assets/logo.svg" alt="" width="36" height="36"><span>OpenPlay<span class="brand-x">X</span></span></a><nav id="site-nav" aria-label="${e(c.navLabel)}"><a href="${url(lang)}#features">${e(c.nav[0])}</a><a ${page==='ecosystem'?'aria-current="page"':''} href="${url(lang,'ecosystem')}">${e(c.nav[1])}</a><a ${page==='contribute'?'aria-current="page"':''} href="${url(lang,'contribute')}">${e(c.nav[2])}</a><a href="${lang==='zh'?'/docs/zh-Hans/':'/docs/'}">${e(c.docs)}</a><a href="/account/?lang=${c.lang}">${e(c.account)}</a></nav><div class="header-actions"><a class="language-link" href="${url(lang==='en'?'zh':'en',page)}" hreflang="${lang==='en'?'zh-CN':'en'}" data-language aria-label="${e(c.languageLabel)}">${e(c.language)}</a>${ext(gh+'/openplayx',icon('github'),'github-link')}<a class="header-download" href="${url(lang,'download')}">${e(c.download)}${icon('download')}</a><button class="theme-toggle" type="button" data-theme-toggle aria-label="${e(c.themeLabel)}"></button><button class="menu-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="${e(c.menu)}">${icon('menu')}</button></div></div></header>`;
 }
 function footer(c,lang) {
-  const links=[[url(lang,'download'),c.footerLinks[0]],[url(lang,'ecosystem'),c.footerLinks[1]],[url(lang,'contribute'),c.footerLinks[2]],[gh+'/openplayx',c.footerLinks[3]],[gh+'/openplayx/releases/latest',c.footerLinks[4]],[gh+'/openplayx/issues',c.footerLinks[5]],[url(lang,'privacy'),c.footerLinks[6]],[gh+'/openplayx#platform-support',c.footerLinks[7]]];
-  return `<footer class="site-footer"><div class="container footer-main"><div><a class="brand" href="${url(lang)}"><img src="/assets/logo.svg" alt="" width="34" height="34"><span>OpenPlay<span class="brand-x">X</span></span></a><p>${e(c.footerLine)}</p></div><div class="footer-links">${[c.footerProject,c.footerResources,c.footerLegal].map((label,i)=>`<div><h3>${e(label)}</h3>${links.slice(i===0?0:i===1?3:6,i===0?3:i===1?6:8).map(([href,label])=>`<a href="${href}">${e(label)}</a>`).join('')}</div>`).join('')}</div></div><div class="container footer-bottom"><span>© 2026 OpenPlayX</span><span>${e(c.footerBottom)}</span><span>EN / 中文</span></div></footer>`;
+  const docsHref=lang==='zh'?'/docs/zh-Hans/':'/docs/';
+  const links=[[url(lang,'download'),c.footerLinks[0]],[url(lang,'ecosystem'),c.footerLinks[1]],[url(lang,'contribute'),c.footerLinks[2]],[docsHref,c.docs],[gh+'/openplayx',c.footerLinks[3]],[gh+'/openplayx/releases/latest',c.footerLinks[4]],[gh+'/openplayx/issues',c.footerLinks[5]],[url(lang,'privacy'),c.footerLinks[6]],[gh+'/openplayx#platform-support',c.footerLinks[7]]];
+  return `<footer class="site-footer"><div class="container footer-main"><div><a class="brand" href="${url(lang)}"><img src="/assets/logo.svg" alt="" width="34" height="34"><span>OpenPlay<span class="brand-x">X</span></span></a><p>${e(c.footerLine)}</p></div><div class="footer-links">${[c.footerProject,c.footerResources,c.footerLegal].map((label,i)=>`<div><h3>${e(label)}</h3>${links.slice(i===0?0:i===1?3:7,i===0?3:i===1?7:9).map(([href,label])=>`<a href="${href}">${e(label)}</a>`).join('')}</div>`).join('')}</div></div><div class="container footer-bottom"><span>© 2026 OpenPlayX</span><span>${e(c.footerBottom)}</span><span>EN / 中文</span></div></footer>`;
+}
+function jsonLd(c, lang, page, releases, description) {
+  const origin = 'https://openplayx.com';
+  const pageUrl = `${origin}${url(lang, page)}`;
+  const homeUrl = `${origin}${url(lang)}`;
+  const docsUrl = `${origin}${lang === 'zh' ? '/docs/zh-Hans/' : '/docs/'}`;
+  const platforms = availablePlatforms(releases).map(p => platformTitle(c, p));
+  const software = {
+    '@type': 'SoftwareApplication',
+    name: 'OpenPlayX',
+    applicationCategory: 'MultimediaApplication',
+    operatingSystem: platforms.join(', '),
+    softwareVersion: releases.tag,
+    url: homeUrl,
+    downloadUrl: `${origin}${url(lang, 'download')}`,
+    releaseNotes: releases.url,
+    softwareHelp: docsUrl,
+    license: 'https://github.com/openplayx/openplayx/blob/main/LICENSE',
+    description: c.description,
+    offers: {'@type': 'Offer', price: '0', priceCurrency: 'USD'},
+    featureList: lang === 'zh'
+      ? ['libmpv 与 libVLC 双播放引擎', 'SMB、WebDAV、FTP/SFTP、S3、Jellyfin、Plex、Emby 与网盘来源', 'Whisper 本地与 Groq 免费代理 AI 字幕生成及时间轴对齐', '桌面与移动端画中画（PiP）', '自选 OpenAI 兼容模型与开放 MCP 工具生态', 'Connector 远程家庭媒体访问']
+      : ['libmpv and libVLC dual playback engine routing', 'SMB, WebDAV, FTP/SFTP, S3, Jellyfin, Plex, Emby and cloud drive sources', 'AI subtitle generation (local whisper.cpp & Groq proxy) and SRT alignment', 'Picture-in-Picture on desktop and mobile', 'Bring-your-own OpenAI-compatible model and open MCP tool ecosystem', 'Connector remote access for home media'],
+  };
+  const org = {
+    '@type': 'Organization',
+    name: 'OpenPlayX',
+    url: origin,
+    logo: `${origin}/assets/app-icon.png`,
+    sameAs: ['https://github.com/openplayx'],
+  };
+  const graph = [org];
+  if (!page) {
+    graph.push(software, {
+      '@type': 'WebSite',
+      name: 'OpenPlayX',
+      url: homeUrl,
+      inLanguage: c.lang,
+    }, {
+      '@type': 'FAQPage',
+      mainEntity: c.faq.map(([q, a]) => ({
+        '@type': 'Question',
+        name: q,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: a.replace('{platforms}', platforms.join(lang === 'zh' ? '、' : ', ')),
+        },
+      })),
+    });
+  } else {
+    const label = page === 'download' ? c.download : page === 'ecosystem' ? c.nav[1] : page === 'contribute' ? c.nav[2] : c.footerLinks[6];
+    graph.push({
+      '@type': 'WebPage',
+      name: `${label} — OpenPlayX`,
+      url: pageUrl,
+      description,
+      inLanguage: c.lang,
+    }, {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {'@type': 'ListItem', position: 1, name: 'OpenPlayX', item: homeUrl},
+        {'@type': 'ListItem', position: 2, name: label, item: pageUrl},
+      ],
+    });
+    if (page === 'download') graph.push(software);
+  }
+  return `<script type="application/ld+json">${JSON.stringify({'@context': 'https://schema.org', '@graph': graph}).replaceAll('<', '\\u003c')}</script>`;
 }
 export function render(lang,page='',notFound=false,releases=snapshots.app) {
   const c=copy[lang];const label=page==='download'?c.download:page==='ecosystem'?c.nav[1]:page==='contribute'?c.nav[2]:page==='privacy'?c.footerLinks[6]:'';
   const title=label?`${label} — OpenPlayX`:c.title;
+  const description=(page && c.pageDescriptions?.[page]) || c.description;
   const body=notFound?`<section class="container page-hero missing"><span class="error-number">404</span><h1>${e(c.notFoundTitle)}</h1><p>${e(c.notFoundText)}</p>${button(url(lang),c.backHome)}</section>`:page==='download'?downloads(c,lang,releases):page==='ecosystem'?ecosystem(c,lang):page==='contribute'?contribute(c):page==='privacy'?privacy(c):home(c,lang,releases);
   // Copy text names the release as the literal v0.0.1 (i18n/*/site.json); show the current tag.
   const tagged=(html)=>html.replaceAll('v0.0.1',releases.tag);
-  return tagged(`<!doctype html><html lang="${c.lang}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark light"><meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)"><title>${e(title)}</title><meta name="description" content="${e(c.description)}">${notFound?'<meta name="robots" content="noindex">':`<link rel="canonical" href="https://openplayx.com${url(lang,page)}"><link rel="alternate" hreflang="en" href="https://openplayx.com${url('en',page)}"><link rel="alternate" hreflang="zh-CN" href="https://openplayx.com${url('zh',page)}"><link rel="alternate" hreflang="x-default" href="https://openplayx.com${url('en',page)}">`}<meta property="og:type" content="website"><meta property="og:site_name" content="OpenPlayX"><meta property="og:title" content="${e(title)}"><meta property="og:description" content="${e(c.description)}"><meta property="og:locale" content="${c.locale}"><meta property="og:image" content="https://openplayx.com/assets/app-icon.png"><meta property="og:url" content="https://openplayx.com${url(lang,page)}"><meta name="twitter:card" content="summary"><link rel="icon" href="/assets/favicon.png" type="image/png"><link rel="apple-touch-icon" href="/assets/app-icon.png"><link rel="stylesheet" href="/assets/site.css"><script src="/assets/opx-theme.js"></script><script src="/assets/site.js" defer></script><script src="/assets/analytics.js" defer></script></head><body data-page="${page||'home'}">${header(c,lang,page)}<main id="main">${body}</main>${footer(c,lang)}</body></html>`);
+  return tagged(`<!doctype html><html lang="${c.lang}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark light"><meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)"><title>${e(title)}</title><meta name="description" content="${e(description)}">${notFound?'<meta name="robots" content="noindex">':`<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"><link rel="canonical" href="https://openplayx.com${url(lang,page)}"><link rel="alternate" hreflang="en" href="https://openplayx.com${url('en',page)}"><link rel="alternate" hreflang="zh-CN" href="https://openplayx.com${url('zh',page)}"><link rel="alternate" hreflang="x-default" href="https://openplayx.com${url('en',page)}">`}<link rel="alternate" type="text/plain" href="https://openplayx.com/llms.txt" title="OpenPlayX LLMs.txt"><meta property="og:type" content="website"><meta property="og:site_name" content="OpenPlayX"><meta property="og:title" content="${e(title)}"><meta property="og:description" content="${e(description)}"><meta property="og:locale" content="${c.locale}"><meta property="og:locale:alternate" content="${lang==='zh'?'en_US':'zh_CN'}"><meta property="og:image" content="https://openplayx.com/assets/app-icon.png"><meta property="og:image:alt" content="OpenPlayX"><meta property="og:url" content="https://openplayx.com${url(lang,page)}"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="${e(title)}"><meta name="twitter:description" content="${e(description)}"><meta name="twitter:image" content="https://openplayx.com/assets/app-icon.png">${notFound?'':jsonLd(c,lang,page,releases,description)}<link rel="icon" href="/assets/favicon.png" type="image/png"><link rel="apple-touch-icon" href="/assets/app-icon.png"><link rel="stylesheet" href="/assets/site.css"><script src="/assets/opx-theme.js"></script><script src="/assets/site.js" defer></script><script src="/assets/analytics.js" defer></script></head><body data-page="${page||'home'}">${header(c,lang,page)}<main id="main">${body}</main>${footer(c,lang)}</body></html>`);
 }

@@ -3,6 +3,8 @@ import {readFile, readdir, cp, rm, writeFile, lstat} from 'node:fs/promises';
 import {resolve, join} from 'node:path';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
+import {docIndex, renderLlmsFullTxt} from '../src/llms.mjs';
+import releases from '../content/releases.json' with { type: 'json' };
 const root=new URL('../',import.meta.url).pathname;
 const source=resolve(process.argv[2] || process.env.OPX_DOCS_BUILD || join(root,'../docs/build'));
 const dist=join(root,'dist'), target=join(dist,'docs');
@@ -20,7 +22,14 @@ for(const [name,record] of Object.entries(manifest.files)){
   assert.equal(bytes.length,record.size,name);
   assert.equal(createHash('sha256').update(bytes).digest('hex'),record.sha256,`Docs digest mismatch: ${name}`);
 }
-for(const route of ['index.html','zh-Hans/index.html','sources/smb/index.html','zh-Hans/sources/smb/index.html','404.html','sitemap.xml'])assert(manifest.files[route],`Missing docs route ${route}`);
+for(const route of ['index.html','zh-Hans/index.html','getting-started/tv/index.html','playback/subtitles/index.html','sources/smb/index.html','sources/media-servers/index.html','sources/cloud-drives/index.html','zh-Hans/sources/smb/index.html','404.html','sitemap.xml'])assert(manifest.files[route],`Missing docs route ${route}`);
+// Ensure every published English doc route is covered by the analytics allowlist so new pages are not logged as 404/.
+const analyticsSrc=await readFile(join(root,'src/analytics.js'),'utf8');
+for(const file of Object.keys(manifest.files)){
+  if(!file.endsWith('/index.html')||file.startsWith('zh-Hans/')||file==='search/index.html')continue;
+  const route=file.slice(0,-'index.html'.length);
+  assert(analyticsSrc.includes(`'${route}'`),`Docs route missing from src/analytics.js allowlist: ${route}`);
+}
 await rm(target,{recursive:true,force:true});await cp(source,target,{recursive:true});
 // The standalone docs artifact remains independent of the private build repo and
 // marketing analytics. Add the first-party bundle only to the assembled site.
@@ -33,4 +42,14 @@ const sha=dir=>{try{return execFileSync('git',['-C',dir,'rev-parse','HEAD'],{enc
 const provenance={schemaVersion:1,webCommit:process.env.OPX_SOURCE_SHA||sha(root),docsCommit:manifest.docsCommit,buildCommit:process.env.OPX_BUILD_SHA||sha(join(root,'../build')),nodeVersion:process.version,builtAt:new Date().toISOString(),docsManifestSha256:createHash('sha256').update(JSON.stringify(manifest)).digest('hex')};
 await writeFile(join(dist,'site-manifest.json'),JSON.stringify(provenance,null,2)+'\n');
 await writeFile(join(dist,'robots.txt'),(await readFile(join(dist,'robots.txt'),'utf8'))+'Sitemap: https://openplayx.com/docs/sitemap.xml\n');
-console.log('Assembled verified bilingual docs into the complete website.');
+// Populate llms-full.txt with the full English documentation markdown when available alongside docs/build.
+const docsMarkdownDir=resolve(source,'../docs');
+const fullDocs=[];
+for(const [route,title] of docIndex){
+  const mdPath=join(docsMarkdownDir,route?route.replace(/\/$/,'')+'.md':'index.md');
+  try{ fullDocs.push({route,title,content:await readFile(mdPath,'utf8')}); }catch{}
+}
+if(fullDocs.length){
+  await writeFile(join(dist,'llms-full.txt'),renderLlmsFullTxt(releases,fullDocs));
+}
+console.log(`Assembled verified bilingual docs into the complete website (${fullDocs.length} guides indexed in llms-full.txt).`);

@@ -50,11 +50,9 @@ The owner removed conflicting DNS records, after which `npm run deploy` successf
 
 Both production hosts passed HTTPS checks for English and Chinese homepages, download pages, CSS and an unknown-path 404. Local DNS still returned the old address at verification time, so these checks connected to the public DNS result using curl `--resolve`, retaining hostname and TLS certificate verification. No certificate checks were disabled.
 
-For subsequent deployments:
+For subsequent production deployments, **push changes to `openplayx/web` and/or `openplayx/docs` `main` and use the Jenkins `web/site-publish` pipeline** (it polls both `main` branches every 5 minutes, builds and tests the complete bilingual site, archives digests, records a rollback baseline, deploys `openplayx-web` and verifies live routes with automatic rollback on failure; `web/deploy` is the manual Jenkins entry).
 
-```sh
-npm run deploy
-```
+Do **not** run local `npm run deploy` / `wrangler deploy` directly for routine production releases—use local commands (`npm test`, `npm run test:integration`, `npm run build:site`, `npm run test:docs`, `npm run check`) for local verification only. See `build/docs/site-workers.md` for full Jenkins runbook details.
 
 The configured canonical URLs and sitemap target `https://openplayx.com`. The `workers.dev` URL stays available as a preview. Deployment touches only this website Worker and its two custom domains; the existing MCP service is separate.
 

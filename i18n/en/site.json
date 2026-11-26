@@ -3,8 +3,14 @@
   "locale": "en_US",
   "language": "中文",
   "languageLabel": "Switch to Chinese",
-  "title": "OpenPlayX — Your media. Your rules.",
-  "description": "A local-first media player with a personal library, an AI assistant and an open MCP ecosystem. Download for macOS, Windows, Linux, Android and Android TV.",
+  "title": "OpenPlayX — Local-First Media Player for NAS, Jellyfin, Plex & AI Subtitles",
+  "description": "Open-source, local-first media player powered by libmpv and libVLC. Connect SMB, WebDAV, Jellyfin, Plex, Emby and cloud drives, generate AI subtitles with Whisper, and extend with MCP on macOS, Windows, Linux, Android, Android TV and Apple TV.",
+  "pageDescriptions": {
+    "download": "Download OpenPlayX installers for macOS (DMG), Windows (EXE), Linux (AppImage), Android, Android TV and Apple TV (tvOS), with SHA-256 checksums and release notes.",
+    "ecosystem": "Explore OpenPlayX’s open MCP ecosystem: self-hostable services for web search, Douban & IMDb metadata, yt-dlp, qBittorrent and whisper.cpp speech recognition.",
+    "contribute": "Contribute to OpenPlayX: report reproducible playback issues, build open MCP integrations, improve translations and test across desktop, mobile and TV platforms.",
+    "privacy": "Read the OpenPlayX website and documentation privacy boundary. Local playback stays on your device without requiring an account or AI subscription."
+  },
   "nav": [
     "Features",
     "Ecosystem",
